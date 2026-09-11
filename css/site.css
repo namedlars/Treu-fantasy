@@ -1,0 +1,215 @@
+/* ==========================================================================
+   WEBSITE. Das zweite Regelwerk neben der Landingpage.
+
+   Die Landingpage ist eine Komposition: jede Sektion hat ihre eigene Buehne,
+   ihre eigene Bewegung, und sie lebt von grossen Flaechen. Ihre Regeln stehen
+   deshalb bei ihr in der Datei und werden nirgends sonst gebraucht.
+
+   Die Unterseiten sind das Gegenteil. Sie werden gelesen, nicht angeschaut,
+   oft nach einem Link aus einer Mail, oft von jemandem der die App gar nicht
+   will. Sie brauchen eine feste Leiste, einen ruhigen Textkoerper, ein
+   Verzeichnis und einen Footer. Immer dieselben Bauteile, auf jeder Seite
+   gleich.
+
+   Beides in eine Datei zu legen hiesse, dass jede Aenderung an einer
+   Landingpage-Sektion die Rechtstexte anfassen kann. Deshalb zwei Regelwerke.
+   Gemeinsam sind nur die Tokens aus css/variables.css.
+   ========================================================================== */
+
+/* ---- Grundlage ---- */
+.st-body { margin: 0; background: var(--tf-surface); color: var(--tf-text-primary);
+  font-family: var(--tf-font-base); overflow-x: hidden; }
+.st-wrap { width: min(1160px, 100% - 48px); margin: 0 auto; }
+.ic { width: 24px; height: 24px; flex: none; display: inline-block; color: inherit; pointer-events: none; }
+.ic-16 { width: 16px; height: 16px; }
+.ic-20 { width: 20px; height: 20px; }
+
+/* ---- Leiste ----
+   Fest, weil die Rechtstexte lang sind und man von jeder Stelle aus zurueck
+   in die Uebersicht kommen muss, ohne nach oben zu scrollen. */
+.st-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 60; height: 64px;
+  display: flex; align-items: center;
+  background: color-mix(in srgb, var(--tf-surface) 86%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px); backdrop-filter: saturate(1.4) blur(14px);
+  border-bottom: 1px solid var(--tf-stroke); }
+.st-nav__in { display: flex; align-items: center; gap: 26px; width: min(1160px, 100% - 48px); margin: 0 auto; }
+.st-nav__logo { height: 34px; width: auto; display: block; }
+/* Zurueck statt Sektionsmenue. Der Pfeil ist derselbe wie ueberall, nur
+   gedreht, damit die Seite mit einem einzigen Symbol auskommt. */
+.st-nav__back { display: inline-flex; align-items: center; gap: 8px; margin-left: 4px; white-space: nowrap;
+  height: 36px; padding: 0 14px 0 10px; border-radius: var(--tf-radius-pill);
+  border: 1px solid var(--tf-stroke); color: var(--tf-text-secondary, var(--tf-text-muted));
+  text-decoration: none; font: var(--tf-fw-medium) 14px var(--tf-font-base);
+  transition: color var(--tf-dur) var(--tf-ease-out), border-color var(--tf-dur) var(--tf-ease-out),
+              background var(--tf-dur) var(--tf-ease-out); }
+.st-nav__back .ic { transform: rotate(180deg); color: var(--tf-accent-text); }
+.st-nav__back:hover { color: var(--tf-text-primary); border-color: var(--tf-accent-tint-20);
+  background: var(--tf-surface-muted); }
+/* Wo man ist, als ruhige Beschriftung neben dem Knopf. Sie ersetzt die vier
+   Menuepunkte: eine Angabe statt vier Angeboten. */
+.st-nav__where { color: var(--tf-text-muted); font: var(--tf-fw-medium) 13.5px var(--tf-font-base); }
+.st-nav__sp { flex: 1; }
+/* Eigener Knopf statt .tf-btn aus den Bauteilen. Der ist fuer <button> gebaut
+   und behaelt auf einem <a> die Unterstreichung des Browsers. */
+.st-cta { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 18px; white-space: nowrap;
+  border-radius: var(--tf-radius-pill); background: var(--tf-accent); color: #fff;
+  text-decoration: none; font: var(--tf-fw-semibold) 14px var(--tf-font-base);
+  transition: background var(--tf-dur) var(--tf-ease-out), transform var(--tf-dur) var(--tf-ease-out); }
+.st-cta:hover { background: var(--tf-accent-dark, var(--tf-accent)); transform: translateY(-1px); }
+.st-main { padding-top: 64px; }
+@media (max-width: 720px) {
+  /* Der Zurueck-Knopf bleibt, die Ortsangabe geht. Auf dem Handy ist die
+     Ueberschrift des Dokuments direkt darunter, das reicht. */
+  .st-nav__where { display: none; }
+  .st-nav__in { gap: 12px; }
+  .st-wrap { width: calc(100% - 40px); }
+}
+@media (max-width: 560px) {
+  /* Unter 560 Pixeln passen Logo, Zurueck und Knopf nicht mehr nebeneinander:
+     beide Beschriftungen brachen auf zwei Zeilen und sprengten die Leiste.
+     Der Pfeil allein sagt dasselbe, der Knopf behaelt seinen Text. */
+  .st-nav__back span { display: none; }
+  .st-nav__back { padding: 0 9px; }
+  .st-nav__logo { height: 30px; }
+}
+
+/* ---- Seitenkopf ---- */
+.st-head { padding: 84px 0 38px; border-bottom: 1px solid var(--tf-stroke); }
+.st-head h1 { margin: 0; color: var(--tf-text-primary);
+  font: var(--tf-fw-bold) clamp(30px, 4vw, 46px)/1.08 var(--tf-font-base); }
+.st-head h1 em { font-style: normal; color: var(--tf-accent-text); font-family: var(--tf-font-display);
+  font-weight: var(--tf-fw-regular); font-size: 1.14em; line-height: 0.9; padding-right: .06em; }
+.st-head p { max-width: 62ch; margin: 14px 0 0; color: var(--tf-text-muted);
+  font: var(--tf-fw-regular) 16px/26px var(--tf-font-base); }
+/* ---- Brotkrume ----
+   Drei Stufen: Marke, Uebersicht, Gruppe. Das Dokument selbst steht direkt
+   darunter als Ueberschrift, es waere die vierte Stufe und damit doppelt. */
+.st-crumb { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
+  color: var(--tf-text-muted); font: var(--tf-fw-medium) 13px/18px var(--tf-font-base); }
+.st-crumb a { color: var(--tf-text-muted); text-decoration: none;
+  transition: color var(--tf-dur) var(--tf-ease-out); }
+.st-crumb a:hover { color: var(--tf-text-primary); }
+.st-crumb .ic { width: 13px; height: 13px; opacity: .55; }
+
+/* ---- Weiter und zurueck ----
+   Neun Dokumente ohne Weg dazwischen heisst: jedes Mal hoch zur Uebersicht und
+   wieder runter. */
+.st-pager { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px;
+  margin-top: 46px; padding-top: 26px; border-top: 1px solid var(--tf-stroke); }
+.st-pager__a { display: flex; align-items: center; gap: 12px; padding: 16px 18px;
+  border-radius: var(--tf-radius-md); border: 1px solid var(--tf-stroke); text-decoration: none;
+  transition: border-color var(--tf-dur) var(--tf-ease-out), background var(--tf-dur) var(--tf-ease-out); }
+.st-pager__a:hover { border-color: var(--tf-accent-tint-20); background: var(--tf-surface-muted); }
+.st-pager__a--n { justify-content: flex-end; text-align: right; }
+.st-pager__a .ic { flex: none; color: var(--tf-accent-text); transform: rotate(180deg); }
+.st-pager__a--n .ic { transform: none; }
+.st-pager__a i { display: block; color: var(--tf-text-muted); font-style: normal;
+  font: var(--tf-fw-medium) 12px/16px var(--tf-font-base); }
+.st-pager__a b { display: block; margin-top: 3px; color: var(--tf-text-primary);
+  font: var(--tf-fw-semibold) 14.5px/20px var(--tf-font-base); }
+@media (max-width: 620px) { .st-pager { grid-template-columns: minmax(0,1fr); } }
+
+.st-back { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 18px;
+  background: none; border: 0; padding: 0; cursor: pointer; text-decoration: none;
+  color: var(--tf-text-muted); font: var(--tf-fw-medium) 14px var(--tf-font-base);
+  transition: color var(--tf-dur) var(--tf-ease-out); }
+.st-back:hover { color: var(--tf-text-primary); }
+.st-back .ic { transform: rotate(180deg); }
+
+/* ---- Uebersicht ----
+   Gruppen mit Zeilen, nicht Kacheln. Neun Dokumente als Kachelraster sehen aus
+   wie ein Produktkatalog, und niemand sucht hier ein Produkt. */
+.st-hub { padding: 56px 0 40px; }
+.st-hub__g { margin-bottom: 48px; }
+.st-hub__g h2 { margin: 0 0 10px; color: var(--tf-text-primary);
+  font: var(--tf-fw-semibold) 20px/27px var(--tf-font-base); }
+.st-hub__list { border-top: 1px solid var(--tf-stroke); }
+.st-row { display: grid; grid-template-columns: minmax(0,1fr) 20px; align-items: center;
+  gap: 6px 16px; padding: 17px 14px; border-radius: var(--tf-radius-md);
+  box-shadow: inset 0 -1px 0 var(--tf-stroke);
+  text-decoration: none; transition: background var(--tf-dur) var(--tf-ease-out); }
+.st-row:hover { background: var(--tf-surface-muted); }
+.st-row b { transition: color var(--tf-dur-fast) ease; }
+.st-row:hover b { color: var(--tf-accent-text); }
+.st-row b { color: var(--tf-text-primary); font: var(--tf-fw-semibold) 16px/22px var(--tf-font-base); }
+.st-row span { grid-column: 1; color: var(--tf-text-muted);
+  font: var(--tf-fw-regular) 14px/20px var(--tf-font-base); }
+.st-row .ic { grid-row: span 2; color: var(--tf-text-muted);
+  transition: transform var(--tf-dur) var(--tf-ease-out), color var(--tf-dur) var(--tf-ease-out); }
+.st-row:hover .ic { transform: translateX(3px); color: var(--tf-accent-text); }
+
+/* ---- Leseansicht ----
+   Zwei Spalten mit benannten Feldern, damit der Kopf niemals unter das
+   Verzeichnis rutschen kann. Genau der Fehler stand vorher in der App. */
+.st-doc { display: grid; grid-template-columns: minmax(0, 1fr) 226px;
+  grid-template-areas: "head toc" "main toc"; column-gap: 48px; align-items: start;
+  padding: 56px 0 110px; }
+.st-doc__head { grid-area: head; padding-bottom: 26px; }
+.st-doc__head h1 { margin: 0; color: var(--tf-text-primary);
+  font: var(--tf-fw-bold) clamp(26px, 3.2vw, 38px)/1.12 var(--tf-font-base); }
+.st-doc__meta { margin: 12px 0 0; color: var(--tf-text-muted);
+  font: var(--tf-fw-regular) 14px/20px var(--tf-font-base); }
+.st-doc__main { grid-area: main; min-width: 0; max-width: 74ch; }
+.st-doc__main h2 { margin: 40px 0 12px; scroll-margin-top: 92px; color: var(--tf-text-primary);
+  font: var(--tf-fw-semibold) 19px/26px var(--tf-font-base); }
+.st-doc__main h2:first-child { margin-top: 0; }
+.st-doc__main p { margin: 0 0 16px; color: var(--tf-text-secondary, var(--tf-text-muted));
+  font: var(--tf-fw-regular) 16px/28px var(--tf-font-base); }
+.st-doc__main ul { margin: 0 0 18px; padding-left: 20px; }
+.st-doc__main li { margin-bottom: 8px; color: var(--tf-text-secondary, var(--tf-text-muted));
+  font: var(--tf-fw-regular) 16px/28px var(--tf-font-base); }
+
+.st-toc { grid-area: toc; position: sticky; top: 92px; padding-left: 22px;
+  border-left: 1px solid var(--tf-stroke); }
+.st-toc b { display: block; margin-bottom: 12px; color: var(--tf-text-primary);
+  font: var(--tf-fw-semibold) 13px/18px var(--tf-font-base); }
+.st-toc a { display: block; padding: 5px 0; color: var(--tf-text-muted); text-decoration: none;
+  font: var(--tf-fw-regular) 13.5px/19px var(--tf-font-base);
+  transition: color var(--tf-dur) var(--tf-ease-out); }
+.st-toc a:hover { color: var(--tf-text-primary); }
+/* Der laufende Abschnitt bekommt den Balken in Akzentfarbe auf der Linie, an
+   der das Verzeichnis haengt. Dasselbe Mittel wie die Schiene bei den vier
+   Schritten auf der Landingpage: die Farbe sitzt auf der Linie und nicht
+   daneben. */
+.st-toc a { position: relative; }
+.st-toc a.is-cur { color: var(--tf-accent-text); font-weight: var(--tf-fw-semibold); }
+.st-toc a.is-cur::before { content: ""; position: absolute; left: -23px; top: 4px; bottom: 4px;
+  width: 2px; border-radius: 1px; background: var(--tf-accent); }
+@media (max-width: 900px) { .st-toc a.is-cur::before { display: none; } }
+
+@media (max-width: 900px) {
+  .st-doc { grid-template-columns: minmax(0,1fr); grid-template-areas: "head" "toc" "main";
+    row-gap: 0; }
+  .st-toc { position: static; margin: 0 0 30px; padding: 16px 18px; border-left: 0;
+    border-radius: var(--tf-radius-md); background: var(--tf-surface-muted); }
+}
+
+/* ---- Hinweiskasten am Ende jedes Dokuments ---- */
+.st-note { margin-top: 40px; padding: 18px 20px; border-radius: var(--tf-radius-md);
+  border: 1px solid var(--tf-stroke); background: var(--tf-surface-muted); }
+.st-note p { margin: 0; color: var(--tf-text-muted);
+  font: var(--tf-fw-regular) 14px/22px var(--tf-font-base); }
+.st-note a { color: var(--tf-accent-text); }
+
+/* ---- Footer ----
+   Dieselbe Sandinsel wie auf der Landingpage, damit die Unterseite am Ende
+   sichtbar zur selben Seite gehoert. */
+.st-foot { padding: 70px 0 36px; color: var(--tf-on-sand);
+  background: linear-gradient(0deg, rgba(215,3,78,.10), rgba(215,3,78,.10)), #FBF6F5; }
+.st-foot__cols { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 40px 26px; }
+.st-foot__logo { height: 38px; width: auto; display: block; margin-bottom: 14px; }
+.st-foot__brand p { max-width: 30ch; margin: 0; color: var(--tf-on-sand-muted);
+  font: var(--tf-fw-regular) 14px/22px var(--tf-font-base); }
+.st-foot h4 { margin: 0 0 16px; color: var(--tf-on-sand);
+  font: var(--tf-fw-semibold) 14px/19px var(--tf-font-base); }
+.st-foot ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 11px; }
+.st-foot a { color: var(--tf-on-sand-muted); text-decoration: none;
+  font: var(--tf-fw-regular) 14px/19px var(--tf-font-base);
+  transition: color var(--tf-dur) var(--tf-ease-out); }
+.st-foot a:hover { color: var(--tf-on-sand); }
+.st-foot__end { display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  flex-wrap: wrap; margin-top: 46px; padding-top: 22px;
+  border-top: 1px solid var(--tf-on-sand-divider); color: var(--tf-on-sand-muted);
+  font: var(--tf-fw-regular) 13px/19px var(--tf-font-base); }
+@media (max-width: 820px) { .st-foot__cols { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .st-foot__cols { grid-template-columns: 1fr; gap: 30px; } }

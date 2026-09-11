@@ -1,0 +1,636 @@
+/* ==========================================================================
+   True Fantasy — Komponenten
+   Voraussetzung: variables.css, typography.css
+   Alle Komponenten sind theme-aware (Light/Dark via Variablen).
+   ========================================================================== */
+
+/* ---- Buttons ---- */
+.tf-btn { display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  padding: 10px 16px; border: 0; cursor: pointer; border-radius: var(--tf-radius-full);
+  font: var(--tf-fw-medium) 16px/24px var(--tf-font-base); }
+.tf-btn--primary { background: var(--tf-accent); color: #fff; }
+/* Kleiner Knopf am Ende einer Zeile, etwa "Claim" neben einer Aufgabe.
+   Modifier statt eigener Klasse, damit Farbe, Radius und Fokusring dieselben
+   bleiben. Steht nach .tf-btn, sonst greift die kleinere Groesse nicht. */
+.tf-btn--sm { min-height: 34px; padding: 0 14px; gap: 7px; font: var(--tf-fw-semibold) 13.5px/18px var(--tf-font-base); }
+.tf-btn--sm .ic, .tf-btn--sm svg { width: 15px; height: 15px; }
+.tf-btn--disabled { background: var(--tf-surface-input); color: var(--tf-text-primary);
+  outline: 1px solid var(--tf-divider); outline-offset: -1px; opacity: .999; }
+.tf-btn--disabled .tf-btn__label { opacity: .2; }
+.tf-btn--send { height: 44px; padding: 10px 16px; gap: 10px; background: var(--tf-accent); color: #fff;
+  font: var(--tf-fw-medium) 16px/24px var(--tf-font-base); }
+.tf-btn--glow { background: var(--tf-accent); color: #fff; outline: 1.5px solid #fff; outline-offset: -1.5px;
+  box-shadow: var(--tf-shadow-glow); font: var(--tf-fw-semibold) 14px/21px var(--tf-font-base); letter-spacing: .02em; }
+.tf-btn--google { height: 48px; padding: 10px 24px; gap: 10px; background: var(--tf-c-white); color: #1A1C1E; /* Google-Textfarbe ist third-party-fix */
+  border-radius: 10px; outline: 1px solid var(--tf-stroke-2); outline-offset: -1px;
+  box-shadow: inset 0 -3px 6px rgba(244,245,250,0.6); font: var(--tf-fw-semibold) 14px/20px var(--tf-font-alt); }
+
+/* Icon-Button (Outline / Filled) */
+.tf-icon-btn { height: 44px; padding: 0 16px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--tf-radius-full); outline: 2px solid var(--tf-accent); outline-offset: -2px; background: transparent; }
+.tf-icon-btn--filled { background: var(--tf-accent); outline: 0; }
+
+/* FAB (sekundär / Karten-Action) */
+.tf-fab { width: 54px; height: 54px; display: flex; align-items: center; justify-content: center;
+  border-radius: var(--tf-radius-full); background: var(--tf-accent); }
+.tf-fab--pink { background: var(--tf-accent-2); }
+
+/* ---- Avatar ---- */
+/* flex: none, sonst quetscht eine enge Kopfzeile den Kreis zu einer Pille.
+   Auf 390 Pixeln war der Twin-Avatar im Chatkopf 23 breit und 36 hoch. */
+.tf-avatar { width: 36px; height: 36px; flex: none; border-radius: var(--tf-radius-full); border: 2px solid var(--tf-accent); }
+.tf-avatar--lg { width: 52px; height: 52px; border: 0; }
+
+/* ---- Inputs / Forms ---- */
+.tf-input { height: 40px; padding: 0 12px; display: flex; align-items: center;
+  border-radius: var(--tf-radius-md); outline: 1.5px solid var(--tf-divider); outline-offset: -1.5px;
+  background: transparent; font: var(--tf-fw-medium) 16px/19px var(--tf-font-base); color: var(--tf-text-primary); }
+.tf-input::placeholder { color: var(--tf-text-muted-2); opacity: .5; }
+.tf-form-label { font: var(--tf-fw-medium) 14px/18px var(--tf-font-base); color: var(--tf-text-muted-2); }
+
+/* Composer */
+.tf-composer { padding: 12px; background: var(--tf-surface); box-shadow: var(--tf-shadow-card);
+  border-radius: 8px 8px 0 0; }
+.tf-composer__field { padding: 12px 14px; background: var(--tf-surface-input); border-radius: var(--tf-radius-md); }
+.tf-composer__placeholder { color: var(--tf-text-muted); font: var(--tf-fw-regular) 16px/24px var(--tf-font-base); }
+
+/* ---- Toggles ---- */
+.tf-toggle { width: 42px; height: 24px; padding: 2px; display: inline-flex; align-items: center;
+  background: var(--tf-divider); border-radius: 12px; transition: background var(--tf-dur-fast) var(--tf-ease-out); }
+.tf-toggle--on { background: var(--tf-accent); justify-content: flex-end; }
+.tf-toggle__knob { width: 20px; height: 20px; background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+
+/* Schalter-Zeile: Titel + Erklaerung + Toggle. Ueberall dort, wo eine Einstellung
+   erklaert werden muss und ein blosser Toggle zu wenig Kontext gibt. */
+.tf-switchrow { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.tf-switchrow__tx { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tf-switchrow__t { display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  color: var(--tf-text-primary); font: var(--tf-fw-semibold) 14px/20px var(--tf-font-base); }
+.tf-switchrow__d { color: var(--tf-text-muted); font: var(--tf-fw-regular) 12px/17px var(--tf-font-base); }
+.tf-switchrow .tf-toggle { margin-left: auto; flex: none; cursor: pointer; }
+.tf-switchrow.is-locked { opacity: .55; }
+.tf-switchrow.is-locked .tf-toggle { cursor: not-allowed; }
+
+/* Sichtbarkeits-Block auf der Model-Einstellungsseite. */
+.mp-vis { display: flex; flex-direction: column; gap: 10px; margin-top: 14px;
+  padding: 14px; border: 1px solid var(--tf-divider); border-radius: var(--tf-radius-lg); }
+
+/* Hinweisbox: erklaert Regeln und Konsequenzen direkt am Ort der Entscheidung. */
+.tf-notice { display: flex; align-items: flex-start; gap: 9px; padding: 10px 12px;
+  border-radius: var(--tf-radius-md); background: var(--tf-surface-muted);
+  color: var(--tf-text-muted); font: var(--tf-fw-regular) 12px/18px var(--tf-font-base); }
+.tf-notice .ic { width: 16px; height: 16px; flex: none; margin-top: 1px; }
+.tf-notice b { color: var(--tf-text-primary); font-weight: var(--tf-fw-semibold); }
+/* Die Hinweisbox darf Farbe tragen, sie ist der eine hervorgehobene Satz.
+   Die Icon-Kacheln der Liste daneben bleiben neutral, sonst wird es unruhig. */
+.tf-notice--accent { background: var(--tf-accent-tint-05); color: var(--tf-text-primary); }
+.tf-notice--accent .ic { color: var(--tf-accent-text); }
+.tf-notice--danger { background: var(--tf-danger-tint); color: var(--tf-text-primary); }
+.tf-notice--danger .ic { color: var(--tf-danger); }
+
+/* Konsequenz-Liste: was passiert, wenn der Nutzer eine schwerwiegende Aktion bestaetigt.
+   Design-Notiz (Lars, 08/26): die abgerundete Icon-Kachel (.tf-conseq__ic) sparsam
+   einsetzen — nur fuer Konsequenz-Listen, nicht als Standard-Dekor in neuen Screens. */
+.tf-conseq { display: flex; flex-direction: column; gap: 12px; margin: 2px 0 6px; }
+.tf-conseq__row { display: flex; align-items: flex-start; gap: 11px;
+  color: var(--tf-text-primary); font: var(--tf-fw-regular) 14px/20px var(--tf-font-base); }
+.tf-conseq__ic { width: 30px; height: 30px; border-radius: var(--tf-radius-md); flex: none;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--tf-surface-muted); color: var(--tf-text-muted); }
+.tf-conseq__ic .ic { width: 16px; height: 16px; }
+/* Alle Kacheln neutral. Vier verschiedene Farben in einer Liste stiften mehr
+   Unruhe als Orientierung, die Bedeutung steht ohnehin im Text daneben. */
+.tf-conseq__t { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.tf-conseq__t span { color: var(--tf-text-muted); font: var(--tf-fw-regular) 12px/17px var(--tf-font-base); }
+
+/* Destruktive Aktion, im Marken-Pink. Die Unterscheidung zum normalen CTA passiert
+   ueber Kontext (Warn-Dialog, Konsequenz-Liste), nicht ueber die Farbe. */
+.tf-btn--danger { background: var(--tf-danger); color: #fff; }
+.tf-btn--danger:hover { background: var(--tf-danger-strong); }
+
+.tf-theme-toggle { width: 58px; height: 32px; border-radius: var(--tf-radius-full); background: var(--tf-surface-muted); position: relative; }
+.tf-theme-toggle__knob { position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: var(--tf-radius-full);
+  background: #fff; box-shadow: var(--tf-shadow-pill); }
+[data-theme="dark"] .tf-theme-toggle__knob { left: auto; right: 3px; background: var(--tf-surface); }
+
+/* Auth-Toggle (Log In / Sign Up) */
+.tf-auth-toggle { height: 40px; padding: 2px; gap: 1px; display: inline-flex; align-items: center;
+  background: var(--tf-surface-input); border-radius: var(--tf-radius-pill);
+  outline: 1px solid var(--tf-divider); outline-offset: -1px; }
+.tf-auth-toggle__item { flex: 1; height: 34px; display: flex; align-items: center; justify-content: center;
+  border-radius: var(--tf-radius-pill); color: var(--tf-text-muted); font: var(--tf-fw-medium) 14px/21px var(--tf-font-base); }
+.tf-auth-toggle__item--active { background: var(--tf-accent); color: #fff; font-size: 16px; line-height: 24px; }
+
+/* ---- Navigation ---- */
+.tf-header { display: flex; align-items: center; justify-content: space-between; height: var(--tf-header-height);
+  padding: 16px 24px; background: var(--tf-surface); border-bottom: 1px solid var(--tf-divider); }
+.tf-sidebar { width: var(--tf-sidebar-width); background: var(--tf-surface); border-right: 1px solid var(--tf-divider); }
+
+.tf-nav-item { display: flex; align-items: center; gap: 12px; padding: 8px 12px;
+  border-radius: var(--tf-radius-sm); color: var(--tf-text-primary); font: var(--tf-fw-medium) 16px var(--tf-font-base); }
+.tf-nav-item--active { background: var(--tf-nav-active); border-radius: 1000px; }
+
+.tf-search-pill { height: 40px; padding: 10px 16px; gap: 10px; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--tf-surface); box-shadow: var(--tf-shadow-pill); border-radius: var(--tf-radius-pill);
+  color: var(--tf-text-muted-2); font: var(--tf-fw-regular) 14px/20px var(--tf-font-base); }
+[data-theme="dark"] .tf-search-pill { background: var(--tf-surface); box-shadow: none;
+  outline: 1px solid var(--tf-divider); outline-offset: -1px; color: var(--tf-text-muted); }
+
+/* Tabs (Segmented) */
+.tf-tabs { display: flex; gap: 8px; padding: 12px; background: var(--tf-surface); }
+.tf-tab { flex: 1; height: 40px; display: flex; align-items: center; justify-content: center;
+  background: var(--tf-chip-bg); box-shadow: var(--tf-shadow-pill); border-radius: var(--tf-radius-pill);
+  color: var(--tf-text-muted-2); font: var(--tf-fw-semibold) 16px/19px var(--tf-font-base); }
+.tf-tab--active { color: var(--tf-accent-text); }
+
+/* Filter-Chip */
+.tf-chip-filter { height: 35px; padding: 0 20px; display: inline-flex; align-items: center;
+  background: var(--tf-chip-bg); box-shadow: var(--tf-shadow-pill); border-radius: var(--tf-radius-pill);
+  color: var(--tf-text-muted); font: var(--tf-fw-semibold) 14px/19px var(--tf-font-base); }
+/* Phase 1: aktiver Filter-Chip war nur eingefaerbt -> 2.60:1 auf dark.
+   Jetzt gefuellt wie .tf-chip-select--active: weiss auf Accent = 5.23:1, und beide Chips sehen gleich aus. */
+.tf-chip-filter--active { background: var(--tf-accent); color: var(--tf-on-accent); }
+
+.tf-section-header { display: flex; align-items: center; gap: 8px; padding: 12px;
+  color: var(--tf-text-primary); font: var(--tf-fw-semibold) 20px var(--tf-font-base); }
+
+/* Credits-Pill */
+.tf-credits { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px;
+  background: var(--tf-surface-input); border-radius: var(--tf-radius-lg); color: var(--tf-text-primary);
+  font: var(--tf-fw-semibold) 16px var(--tf-font-base); }
+[data-theme="dark"] .tf-credits { background: var(--tf-surface-muted); }
+
+/* Bottom-Nav (mobile) */
+.tf-bottom-nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 42px;
+  background: var(--tf-surface); box-shadow: 0 -4px 15px -12px rgba(0,0,0,0.05); }
+
+/* ---- Chat ---- */
+.tf-bubble { padding: 12px; max-width: 80%; }
+.tf-bubble--sent { background: var(--tf-accent); color: #fff; border-radius: 12px 0 12px 12px; }
+.tf-bubble--received { background: var(--tf-bubble-received); color: var(--tf-text-primary); border-radius: 0 12px 12px 12px; }
+/* Mobile-Dark: empfangene Bubble nutzt #2D2E2E */
+@media (max-width: 768px) { [data-theme="dark"] .tf-bubble--received { background: var(--tf-surface-muted); } }
+
+.tf-chat-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+.tf-chat-item--unread { background: var(--tf-nav-active); }
+.tf-chat-item__avatar { position: relative; width: 52px; height: 52px; border-radius: var(--tf-radius-full); }
+.tf-chat-item__online { position: absolute; right: 3px; top: 3px; width: 14px; height: 14px;
+  background: var(--tf-accent); border-radius: var(--tf-radius-full); outline: 2px solid var(--tf-surface); }
+.tf-chat-item__name { color: var(--tf-text-primary); font: var(--tf-fw-regular) 20px/24px var(--tf-font-display); }
+.tf-chat-item__preview { color: var(--tf-text-muted); font: var(--tf-fw-regular) 14px/21px var(--tf-font-base); }
+
+.tf-quick-replies { display: flex; gap: 9px; padding: 8px; background: var(--tf-overlay-quickreply); backdrop-filter: blur(10px); }
+.tf-quick-reply { height: 40px; padding: 0 20px; display: flex; align-items: center;
+  background: var(--tf-chip-bg); box-shadow: var(--tf-shadow-pill); border-radius: var(--tf-radius-pill);
+  color: var(--tf-text-muted); font: var(--tf-fw-semibold) 14px/19px var(--tf-font-base); cursor: pointer;
+  transition: transform var(--tf-dur-press) var(--tf-ease-out), background var(--tf-dur-fast) var(--tf-ease-out), color var(--tf-dur-fast) var(--tf-ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .tf-quick-reply:hover { background: var(--tf-accent-tint-15); color: var(--tf-text-primary); transform: translateY(-2px); }
+}
+.tf-quick-reply:active { transform: scale(0.97); }
+@media (prefers-reduced-motion: reduce) { .tf-quick-reply:hover, .tf-quick-reply:active { transform: none; } }
+
+
+/* ---- Cards ---- */
+.tf-post-card { display: flex; flex-direction: column; gap: 16px; width: 366px; }
+.tf-post-card__img { width: 100%; aspect-ratio: 366/274; border-radius: var(--tf-radius-image); object-fit: cover; }
+.tf-post-card__meta { display: flex; align-items: center; justify-content: space-between; }
+.tf-post-card__caption { color: var(--tf-text-primary); font: var(--tf-fw-regular) 16px/24px var(--tf-font-base); }
+
+.tf-model-card { padding: 12px; border-radius: var(--tf-radius-image); aspect-ratio: 286/492;
+  display: flex; flex-direction: column; justify-content: space-between;
+  background: var(--tf-gradient-image), center/cover no-repeat; }
+.tf-model-card__name { color: #fff; font: var(--tf-fw-regular) 32px/32px var(--tf-font-display); }
+.tf-model-card__bio { color: #fff; font: var(--tf-fw-regular) 11px/16px var(--tf-font-base); }
+
+.tf-profile-card { padding: 16px; border-radius: var(--tf-radius-lg);
+  display: flex; flex-direction: column; justify-content: space-between;
+  background: var(--tf-gradient-image), center/cover no-repeat; }
+.tf-profile-card__name { color: #fff; font: var(--tf-fw-regular) 45px/45px var(--tf-font-display); }
+.tf-profile-card__bio { color: #fff; font: var(--tf-fw-regular) 14px/20px var(--tf-font-base); }
+
+.tf-promo-card { position: relative; border-radius: var(--tf-radius-md); overflow: hidden;
+  outline: 4px solid var(--tf-accent); outline-offset: -4px; background: var(--tf-gradient-accent); }
+.tf-promo-card__kicker { color: #fff; font: var(--tf-fw-bold) 24px/24px var(--tf-font-base); text-transform: uppercase; }
+.tf-promo-card__discount { color: #fff; font: italic var(--tf-fw-bold) 96px/70px var(--tf-font-base);
+  text-shadow: 0 4px 23px rgba(0,0,0,0.46); }
+.tf-promo-card__cta { background: #fff; color: var(--tf-accent-dark); border-radius: var(--tf-radius-full);
+  outline: 2px solid var(--tf-accent-dark); outline-offset: -2px;
+  font: var(--tf-fw-bold) 20px/30px var(--tf-font-base); padding: 10px 17px; }
+
+/* ---- Feedback ---- */
+.tf-toast { display: flex; align-items: center; gap: 12px; padding: 12px;
+  background: var(--tf-surface); border-radius: var(--tf-radius-lg); box-shadow: var(--tf-shadow-panel);
+  color: var(--tf-text-primary); font: var(--tf-fw-medium) 14px/21px var(--tf-font-base); }
+.tf-toast__icon { flex: none; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;
+  background: var(--tf-accent); border-radius: var(--tf-radius-full); }
+
+.tf-empty-state { display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: 32px; text-align: center; }
+.tf-empty-state__icon { width: 80px; height: 80px; border-radius: var(--tf-radius-full);
+  display: flex; align-items: center; justify-content: center; background: var(--tf-text-primary); }
+[data-theme="dark"] .tf-empty-state__icon { background: #fff; }
+.tf-empty-state__title { color: var(--tf-text-primary); font: var(--tf-fw-semibold) 20px var(--tf-font-base); }
+.tf-empty-state__text { max-width: 427px; color: var(--tf-text-primary); font: var(--tf-fw-medium) 16px/24px var(--tf-font-base); }
+[data-theme="dark"] .tf-empty-state__text { color: var(--tf-text-muted); }
+
+/* ---- Story-Progress ---- */
+.tf-story-track { flex: 1; height: 4px; background: rgba(255,255,255,0.40); border-radius: 100px; overflow: hidden; }
+.tf-story-fill { display: block; width: 0; height: 4px; background: #fff; border-radius: 100px; }
+
+/* ---- Glass-Chip (über Bildern) ---- */
+.tf-glass-chip { padding: 8px 12px; background: rgba(48,48,56,0.24); color: #fff;
+  -webkit-backdrop-filter: blur(12px) saturate(1.3); backdrop-filter: blur(12px) saturate(1.3);
+  border: 1px solid rgba(255,255,255,0.22); box-shadow: inset 0 1px 1px rgba(255,255,255,0.25), 0 2px 8px rgba(0,0,0,0.18);
+  border-radius: var(--tf-radius-full); font: var(--tf-fw-regular) 16px/24px var(--tf-font-base); }
+
+/* ---- Zarte Akzent-Pille (Status, Auszeichnung). Aus app.html hierher gezogen,
+        weil die Landingpage sie ebenfalls braucht. ---- */
+.detail-subbadge { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; padding: 5px 12px; border-radius: var(--tf-radius-pill);
+background: rgba(215,3,78,0.1); color: var(--tf-accent-text); font: var(--tf-fw-semibold) 13px var(--tf-font-base); }
+
+/* ---- Auswahl-Chip (Selection — gefüllt aktiv; vs. Filter-Chip nur Textfarbe) ---- */
+.tf-chip-select { height: 40px; padding: 0 20px; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--tf-surface-muted); box-shadow: var(--tf-shadow-pill); border-radius: var(--tf-radius-pill);
+  color: var(--tf-text-muted); font: var(--tf-fw-semibold) 14px/19px var(--tf-font-base); cursor: pointer; }
+.tf-chip-select--active { background: var(--tf-accent); color: #fff;
+  outline: 2px solid var(--tf-accent); outline-offset: -2px; }
+
+/* ---- Kosten-Pill (Credits-Preis, invertiert je Theme) ----
+   Light: weißer Grund / dunkler Text · Dark: dunkler Grund / weißer Text */
+.tf-cost-pill { display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 8px 6px 8px 12px;
+  background: var(--tf-c-white); border-radius: 100px; color: var(--tf-c-ink-900);
+  font: var(--tf-fw-semibold) 14px var(--tf-font-base); }
+[data-theme="dark"] .tf-cost-pill { background: var(--tf-c-ink-900); color: var(--tf-c-white); }
+
+/* ---- Preset-Auswahlkarte (Media-Request) ---- */
+.tf-preset { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 120px; cursor: pointer; }
+.tf-preset__thumb { width: 120px; height: 140px; border-radius: var(--tf-radius-md); object-fit: cover;
+  background: var(--tf-gradient-image), center/cover no-repeat;
+  border: 1.5px solid var(--tf-c-ink-500); }            /* Dark-Stroke; im Light: var(--tf-divider) */
+.tf-preset--selected .tf-preset__thumb { border: 3px solid var(--tf-accent); }
+.tf-preset__label { width: 120px; text-align: center; color: #fff;
+  font: var(--tf-fw-semibold) 12px/16px var(--tf-font-base); }
+[data-theme="light"] .tf-preset__thumb { border-color: var(--tf-divider); }
+[data-theme="light"] .tf-preset__label { color: var(--tf-text-primary); }
+
+/* ---- Media-Picker-Overlay (Glass-Panel über dem Composer) ---- */
+.tf-media-picker { display: flex; flex-direction: column; gap: 8px;
+  padding: 12px 24px 8px; background: rgba(25,25,25,0.40); backdrop-filter: blur(10px); }
+.tf-media-picker__row { display: flex; align-items: flex-end; gap: 12px; overflow-x: auto; }
+.tf-media-picker__controls { display: flex; align-items: center; gap: 8px; padding: 0 12px; }
+/* Light-Variante des Overlays: rgba(255,255,255,0.40) — via Theme setzen */
+[data-theme="light"] .tf-media-picker { background: rgba(255,255,255,0.40); }
+
+/* ---- Media-Typ-Umschalter im Composer (Foto/GIF/Kamera) ---- */
+.tf-media-types { display: inline-flex; align-items: center; gap: 4px; padding: 5px;
+  background: var(--tf-surface-input); border-radius: var(--tf-radius-full); box-shadow: var(--tf-shadow-pill); }
+.tf-media-types__btn { width: 62px; height: 34px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--tf-radius-full); outline: 2px solid var(--tf-accent); outline-offset: -2px;
+  background: var(--tf-surface); cursor: pointer; }
+.tf-media-types__btn--active { background: var(--tf-accent); }
+
+/* ---- Fortschrittsring (Generierung) ---- */
+.tf-progress-ring { width: 100px; height: 100px; border-radius: var(--tf-radius-full);
+  border: 8px solid rgba(0,0,0,0.20); border-top-color: var(--tf-accent-text);
+  animation: tf-spin 1s linear infinite; }
+@keyframes tf-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .tf-progress-ring { animation: none; } }
+
+/* ---- Ladebalken (indeterminate; pinke Pille, an BEIDEN Enden gerundet) ---- */
+.tf-loadbar { position: relative; width: 220px; max-width: 70vw; height: 8px; border-radius: var(--tf-radius-full);
+  background: var(--tf-surface-muted); }
+.tf-loadbar::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 42%;
+  border-radius: var(--tf-radius-full); background: var(--tf-accent);   /* Pille bleibt komplett im Track → beide Enden immer rund */
+  animation: tf-loadbar 1.3s var(--tf-ease-in-out) infinite alternate; }
+@keyframes tf-loadbar { from { left: 0; } to { left: 58%; } }
+@media (prefers-reduced-motion: reduce) { .tf-loadbar::after { animation: none; left: 0; width: 100%; } }
+
+/* Kleiner Inline-Spinner (im Composer „Request in Progress") */
+.tf-spinner { width: 22px; height: 22px; border-radius: var(--tf-radius-full);
+  border: 2px solid transparent; border-top-color: var(--tf-accent-text); border-right-color: var(--tf-accent-text);
+  animation: tf-spin 0.8s linear infinite; }
+
+/* ---- Generierungs-Ergebnis (in Chat-Bubble) ---- */
+.tf-gen-result { display: flex; gap: 12px; }
+.tf-gen-result__preview { position: relative; width: 274px; height: 202px; border-radius: var(--tf-radius-md);
+  overflow: hidden; box-shadow: 0 4px 4px rgba(0,0,0,0.25); }
+.tf-gen-result__preview--loading::after { content: ""; position: absolute; inset: 0;
+  background: rgba(25,25,25,0.80); backdrop-filter: blur(20px); }   /* Blur bis fertig */
+.tf-gen-result__percent { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center;
+  color: #fff; font: var(--tf-fw-bold) 21px var(--tf-font-base); }   /* z. B. „47%" */
+.tf-gen-result__body { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 12px; }
+.tf-gen-result__meta { display: flex; align-items: center; gap: 10px; }
+.tf-gen-result__chip { display: inline-flex; align-items: center; gap: 8px; padding: 2px 8px;
+  background: rgba(25,25,25,0.50); backdrop-filter: blur(5px); border-radius: var(--tf-radius-chip);
+  color: rgba(255,255,255,0.5); font: var(--tf-fw-regular) 14px var(--tf-font-base); }
+.tf-gen-result__prompt { color: #fff; opacity: .5; text-align: justify;
+  font: var(--tf-fw-regular) 12px var(--tf-font-base); }
+.tf-gen-result__again { display: inline-flex; align-items: center; gap: 10px; height: 40px; padding: 10px 16px;
+  background: var(--tf-surface-muted); color: var(--tf-text-primary); border-radius: var(--tf-radius-full);
+  font: var(--tf-fw-medium) 16px/24px var(--tf-font-base); cursor: pointer; }
+
+/* ---- Composer-Zustand „Request in Progress" ---- */
+.tf-composer-btn--loading { color: var(--tf-text-muted); }   /* Button zeigt Spinner + „Request in Progress" */
+
+/* ---- Profil-Sidebar (rechte Spalte im Chat) ---- */
+.tf-profile-panel { width: 305px; background: var(--tf-surface-input);
+  border-left: 1px solid var(--tf-divider); display: flex; flex-direction: column; }
+[data-theme="dark"] .tf-profile-panel { background: rgba(50,51,51,0.30); border-color: var(--tf-divider); }
+/* Profil/Galerie-Tabs = .tf-auth-toggle-Logik (aktiv 16/500 primär, inaktiv 14/500 muted), ohne Akzent-Fill */
+.tf-panel-tabs { display: flex; height: 40px; padding: 2px; }
+.tf-panel-tab { flex: 1; display: flex; align-items: center; justify-content: center;
+  font: var(--tf-fw-medium) 14px/21px var(--tf-font-base); color: var(--tf-text-muted); }
+.tf-panel-tab--active { font-size: 16px; line-height: 24px; color: var(--tf-text-primary); }
+
+/* ---- Level-/Beziehungs-Karte (Gamification) ---- */
+.tf-level-card { padding: 12px 17px; background: var(--tf-surface); border-radius: var(--tf-radius-md);
+  outline: 1px solid var(--tf-divider); outline-offset: -1px;
+  display: flex; flex-direction: column; gap: 20px; }
+[data-theme="dark"] .tf-level-card { background: var(--tf-surface); outline-color: var(--tf-divider); }
+.tf-level-card__text { color: var(--tf-text-primary); font: var(--tf-fw-regular) 10px/12px var(--tf-font-base); }
+.tf-level-card__hint { color: var(--tf-text-primary); font: var(--tf-fw-regular) 10px/15px var(--tf-font-base); text-align: center; }
+/* Fortschritt: Track + Fill (Akzent-Verlauf) */
+.tf-level-track { width: 171px; height: 6px; background: var(--tf-surface-input); border-radius: 100px; }
+[data-theme="dark"] .tf-level-track { background: var(--tf-surface-muted); }
+.tf-level-fill { height: 4px; border-radius: 100px;
+  background: linear-gradient(90deg, rgba(215,3,78,0.2) 0%, var(--tf-accent) 100%); }
+
+/* Level-Badge (Schild). Default = pink/aktuell. Tier-Modifier setzen Fill/Outline. */
+.tf-level-badge { width: 42px; height: 48px; border-radius: 1px;
+  background: var(--tf-c-tier-pink-fill); outline: 4px solid var(--tf-c-tier-pink-line); }
+.tf-level-badge--silver { background: var(--tf-c-tier-silver-fill); outline-color: var(--tf-c-tier-silver-line); }
+.tf-level-badge--gold   { background: var(--tf-c-tier-gold-fill);   outline-color: var(--tf-c-tier-gold-line); }
+.tf-level-badge--blue   { background: var(--tf-c-tier-blue-fill);   outline-color: var(--tf-c-tier-blue-line); }
+[data-theme="dark"] .tf-level-badge          { background: var(--tf-c-tier-pink-fill-dk); }
+[data-theme="dark"] .tf-level-badge--silver  { background: var(--tf-c-tier-silver-fill-dk); }
+[data-theme="dark"] .tf-level-badge--gold    { background: var(--tf-c-tier-gold-fill-dk); }
+[data-theme="dark"] .tf-level-badge--blue    { background: var(--tf-c-tier-blue-fill-dk); }
+.tf-level-badge__label { color: var(--tf-text-primary); font: var(--tf-fw-medium) 9px/13px var(--tf-font-base); text-align: center; }
+.tf-level-badge__num   { color: var(--tf-text-primary); font: var(--tf-fw-semibold) 23px/34px var(--tf-font-base); text-align: center; }
+
+/* ---- Galerie-Grid (Medien) ---- */
+.tf-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tf-gallery__item { position: relative; aspect-ratio: 1; padding: 8px; border-radius: var(--tf-radius-sm);
+  background: center/cover no-repeat; display: flex; justify-content: flex-end; align-items: flex-start; }
+.tf-gallery__badge { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+  background: rgba(25,25,25,0.5); border-radius: var(--tf-radius-full); }
+.tf-gallery__duration { position: absolute; left: 8px; bottom: 7px; padding: 2px 8px;
+  background: rgba(25,25,25,0.5); backdrop-filter: blur(5px); border-radius: var(--tf-radius-chip);
+  color: #fff; font: var(--tf-fw-regular) 10px var(--tf-font-base); }
+
+/* ---- Coachmark / Feature-Tooltip ---- */
+.tf-coachmark { position: relative; width: 218px; padding: 12px; background: var(--tf-accent);
+  border-radius: var(--tf-radius-md); color: #fff; }
+.tf-coachmark__title { color: var(--tf-c-yellow); text-transform: uppercase;
+  font: var(--tf-fw-semibold) 16px/24px var(--tf-font-base); }   /* „NEW FEATURE!" */
+.tf-coachmark__text { color: #fff; font: var(--tf-fw-regular) 12px/16px var(--tf-font-base); }
+.tf-coachmark__close { position: absolute; top: 12px; right: 12px; color: #fff; }
+
+/* ---- Twin-Badge (Star-Twin-Feature) ---- */
+.tf-badge-twin { height: 30px; padding: 0 20px; display: inline-flex; align-items: center; gap: 10px;
+  background: var(--tf-accent); box-shadow: var(--tf-shadow-pill); border-radius: var(--tf-radius-pill);
+  color: #fff; font: var(--tf-fw-semibold) 12px/19px var(--tf-font-base); }
+.tf-badge-twin__icon { width: 16px; height: 16px; color: #fff; }  /* Stern-Icon (twin.svg) */
+
+/* Ausgewählte Model-Karte (z. B. aktiver Twin / Auswahl) */
+.tf-model-card--selected { outline: 4px solid var(--tf-accent); outline-offset: -4px; }
+
+/* ---- Stepper (Top-Fortschritt im Create-Flow) ---- */
+.tf-stepper { height: 3px; background: var(--tf-divider); }
+.tf-stepper__fill { height: 3px; background: var(--tf-accent); transition: width .25s ease-out; }
+/* Breite = Schritt/Anzahl × 100% */
+
+/* ---- Slider (Persönlichkeits-Regler) ---- */
+.tf-slider { position: relative; height: 5px; display: flex; align-items: center; }
+.tf-slider__track { flex: 1; height: 3px; background: var(--tf-text-muted); border-radius: 20px; }
+[data-theme="dark"] .tf-slider__track { background: var(--tf-text-muted); }
+.tf-slider__fill { height: 5px; background: var(--tf-accent); border-radius: 20px; }
+.tf-slider__thumb { position: absolute; width: 17px; height: 17px; border-radius: var(--tf-radius-full);
+  background: var(--tf-accent); box-shadow: var(--tf-shadow-pill); outline: 4px solid var(--tf-accent-tint-20); }
+.tf-slider__label { color: var(--tf-text-muted); font: var(--tf-fw-medium) 12px/16px var(--tf-font-base); }
+
+/* ---- Textarea ---- */
+.tf-textarea { width: 100%; min-height: 80px; padding: 12px; border-radius: 12px;
+  outline: 1.5px solid var(--tf-divider); outline-offset: -1.5px; background: transparent;
+  /* Ohne Anfasser: den Griff zeichnet der Browser in die untere rechte Ecke,
+     ausserhalb der Rundung, und dort sieht das Feld angeschlagen aus. */
+  font: var(--tf-fw-medium) 16px/19px var(--tf-font-base); color: var(--tf-text-primary); resize: none; }
+.tf-textarea::placeholder { color: var(--tf-text-muted-2); }
+.tf-char-count { color: var(--tf-text-muted-2); font: var(--tf-fw-medium) 12px/16px var(--tf-font-base); } /* „0/1248" */
+
+/* ---- Keyboard-Hint ---- */
+.tf-keyhint { display: inline-flex; align-items: center; gap: 2px;
+  color: var(--tf-text-muted); font: var(--tf-fw-regular) 14px/18px var(--tf-font-base); }
+.tf-keycap { min-width: 20px; height: 20px; padding: 0 4px; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--tf-surface-input); border-radius: 2px; color: var(--tf-text-muted); }
+[data-theme="dark"] .tf-keycap { background: var(--tf-surface-muted); }
+
+/* ---- Attribut-Selector (Create: Random/Optionen) ---- */
+.tf-select-list { display: flex; flex-direction: column; gap: 6px; }
+.tf-select-item { display: flex; align-items: center; gap: 10px; padding: 0 12px 0 0; height: 40px;
+  border-radius: var(--tf-radius-md); color: var(--tf-text-primary); font: var(--tf-fw-semibold) 14px/20px var(--tf-font-base); cursor: pointer; }
+.tf-select-item__thumb { width: 40px; height: 40px; border-radius: var(--tf-radius-md); object-fit: cover; flex: none; }
+.tf-select-item--active { background: var(--tf-nav-active); outline: 1.5px solid var(--tf-accent); outline-offset: -1.5px; color: var(--tf-accent-text); }
+.tf-select-item--random { background: linear-gradient(90deg, rgba(215,3,78,0.15) 0%, rgba(54,251,156,0.15) 100%); }
+/* Kategorie-Tab-Leiste = horizontale .tf-select-item mit Trenner 1px var(--tf-divider), aktiv = Accent-Text */
+
+/* ---- Preis-/Coin-Pack-Karte ---- */
+.tf-price-card { position: relative; display: flex; flex-direction: column; gap: 24px;
+  padding: 32px 24px 24px; border-radius: var(--tf-radius-lg);
+  outline: 1.5px solid var(--tf-divider); outline-offset: -1.5px; }
+.tf-price-card--featured { outline-color: var(--tf-accent-text); }
+.tf-price-card__art { width: 100%; aspect-ratio: 256/144; border-radius: var(--tf-radius-md);
+  background: var(--tf-coin-bg); }                 /* Coin-Illustration-Hintergrund */
+.tf-price-card__title { color: var(--tf-text-primary); font: var(--tf-fw-semibold) 20px var(--tf-font-base); }
+.tf-price-card__old { color: var(--tf-text-muted); text-decoration: line-through; font: var(--tf-fw-medium) 16px var(--tf-font-base); }
+.tf-price-card__save { color: var(--tf-text-primary); font: var(--tf-fw-medium) 16px/24px var(--tf-font-base); }
+/* Preis = .tf-price (40px desktop / 28px mobile) */
+
+/* Balance-/Coin-Badge */
+.tf-coin-badge { display: inline-flex; align-items: center; gap: 12px; padding: 8px 12px;
+  background: var(--tf-accent-tint-15); border-radius: var(--tf-radius-lg);
+  color: var(--tf-text-primary); font: var(--tf-fw-semibold) 16px var(--tf-font-base); }
+[data-theme="light"] .tf-coin-badge { background: var(--tf-accent-tint-light); } /* heller im Light */
+
+/* Ribbon (Popular / Best value) */
+.tf-ribbon { position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px;
+  background: var(--tf-accent); border-radius: 100px; color: #fff; font: var(--tf-fw-medium) 14px/14px var(--tf-font-base); }
+
+/* Karussell-Punkte (mobile Pagination) */
+.tf-dots { display: inline-flex; gap: 12px; }
+.tf-dot { width: 16px; height: 16px; border-radius: var(--tf-radius-full); border: 1px solid var(--tf-text-primary); }
+.tf-dot--active { display: flex; align-items: center; justify-content: center; }
+.tf-dot--active::after { content: ""; width: 8px; height: 8px; border-radius: var(--tf-radius-full); background: var(--tf-accent); }
+
+/* ---- Settings-/Profil-Listenzeile ---- */
+.tf-settings-row { display: flex; align-items: center; gap: 16px; padding: 16px 24px;
+  border-bottom: 1px solid var(--tf-divider); color: var(--tf-text-primary); font: var(--tf-fw-semibold) 16px var(--tf-font-base); }
+.tf-settings-row--active { background: var(--tf-nav-active); }
+.tf-settings-row__value { color: var(--tf-text-muted); }    /* z. B. Zähler „5" */
+.tf-settings-row--muted { color: var(--tf-text-muted); font-weight: var(--tf-fw-medium); } /* @handle-Zeile */
+/* Muss nach .tf-settings-row stehen, sonst gewinnt bei gleicher Spezifitaet die Basisregel. */
+.tf-settings-row--danger { color: var(--tf-danger); }
+.tf-settings-row--danger .ic { color: var(--tf-danger); }
+
+/* ---- Stat-Pill (Kennzahl: Label + Akzentwert) ---- */
+.tf-stat-pill { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px;
+  background: var(--tf-surface-input); border-radius: var(--tf-radius-md);
+  color: var(--tf-text-primary); font: var(--tf-fw-medium) 16px/19px var(--tf-font-base); }
+.tf-stat-pill__value { color: var(--tf-accent-text); font-weight: var(--tf-fw-semibold); }
+
+/* ---- Handle-Pill (@username) ---- */
+.tf-handle { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 16px;
+  background: var(--tf-surface-input); border-radius: var(--tf-radius-full);
+  color: var(--tf-accent-text); font: var(--tf-fw-medium) 16px/24px var(--tf-font-base); }
+
+/* ---- Funktions-Kosten-Karte ---- */
+.tf-function-card { display: flex; flex-direction: column; gap: 12px; padding: 10px 17px;
+  background: var(--tf-surface-input); border-radius: var(--tf-radius-md); }
+.tf-function-card__title { color: var(--tf-text-primary); font: var(--tf-fw-semibold) 16px/20px var(--tf-font-base); }
+/* Coin-Wert + Dollar-Äquivalent: Coin-Icon + Wert (primär) + „20$" (muted) */
+
+/* ---- Liniendiagramm (Earnings / Subscriber Growth) ---- */
+.tf-chart { position: relative; width: 100%; }
+.tf-chart__grid { display: flex; flex-direction: column; gap: 16px; }
+.tf-chart__row { display: flex; align-items: center; gap: 12px; }
+.tf-chart__ytick { width: 45px; color: var(--tf-text-muted); font: var(--tf-fw-medium) 14px var(--tf-font-base); }
+.tf-chart__line { flex: 1; height: 6px; border-radius: 100px; outline: 1px solid var(--tf-divider); outline-offset: -.5px; }
+.tf-chart__xaxis { display: flex; justify-content: space-between; color: var(--tf-text-muted); font: var(--tf-fw-medium) 14px var(--tf-font-base); }
+.tf-chart__curve { position: absolute; outline: 2.5px solid var(--tf-accent); border-radius: 200px; } /* Akzent-Kurve */
+.tf-chart__point { position: absolute; width: 16px; height: 16px; background: var(--tf-accent);
+  border: 3px solid var(--tf-surface); border-radius: 100px; }
+.tf-chart__tooltip { position: absolute; padding: 12px; background: var(--tf-surface);
+  border-radius: var(--tf-radius-md); outline: 1px solid var(--tf-divider); outline-offset: -1px;
+  box-shadow: 0 4px 15px -12px rgba(0,0,0,0.05); color: var(--tf-text-primary); font: var(--tf-fw-regular) 14px/21px var(--tf-font-base); }
+
+/* ---- Avatar XL (Profil-Header) ---- */
+.tf-avatar--xl { width: 94px; height: 94px; border: 3px solid var(--tf-accent); }
+
+/* ---- Brand-Splash (StarTwin) ---- */
+.tf-splash { position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: var(--tf-gradient-brand); display: flex; align-items: center; justify-content: center; }
+.tf-splash__title { color: #fff; text-align: center; text-transform: uppercase;
+  font: italic var(--tf-fw-bold) clamp(64px, 30vw, 428px)/0.73 var(--tf-font-base); }
+.tf-splash__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.20);
+  outline: 6px solid rgba(255,255,255,0.27); outline-offset: -6px; pointer-events: none; }
+
+/* ============================================================
+   MOTION / INTERACTION STATES (System-Layer)
+   Tokens: --tf-ease-*, --tf-dur-* aus variables.css
+   Regel: nur transform/opacity animieren; UI < 300ms; ease-out.
+   ============================================================ */
+
+/* Press-Feedback: alles Klickbare bestätigt den Druck */
+.tf-btn, .tf-nav-item, .tf-chip-filter, .tf-tab, .tf-icon-btn,
+.tf-model-card, .tf-post-card, .tf-chat-item, .tf-price-card, .tf-credits {
+  transition: transform var(--tf-dur-press) var(--tf-ease-out),
+              background-color var(--tf-dur-fast) ease,
+              color var(--tf-dur-fast) ease,
+              box-shadow var(--tf-dur-fast) ease;
+}
+.tf-btn:active, .tf-chip-filter:active, .tf-tab:active,
+.tf-icon-btn:active, .tf-credits:active { transform: scale(0.97); }
+
+/* Hover nur auf echten Zeigegeräten (kein False-Positive auf Touch) */
+@media (hover: hover) and (pointer: fine) {
+  .tf-nav-item:not(.tf-nav-item--active):hover { background: var(--tf-nav-active); }
+  .tf-chip-filter:not(.tf-chip-filter--active):hover { color: var(--tf-text-primary); }
+  .tf-model-card:hover, .tf-post-card:hover { transform: translateY(-4px); }
+  .tf-price-card:hover { transform: translateY(-3px); box-shadow: var(--tf-shadow-panel); }
+  .tf-chat-item:hover { background: var(--tf-nav-active); }
+  .tf-btn--primary:hover, .tf-btn--glow:hover { filter: brightness(1.05); }
+}
+
+/* ============================================================
+   Interaktions-Layer — EINE Hover/Press-Logik für ALLE klickbaren Familien
+   (gleiche Dauer-Tokens, gleiches Press-Scale, Hover nur auf Zeigegeräten)
+   ============================================================ */
+.pbx-tab, .pbx-cell, .pbx-sw, .pbx-galbtn, .pbg-cell, .gal-chip, .dur-chip,
+.cr-voice, .cr-voice__play, .mytwin-row, .stat-trow__btn, .mp-period__b,
+.tf-chip-select, .mpanel__back, .cr-gchip, .gift, .voice-speed {
+  transition: transform var(--tf-dur-press) var(--tf-ease-out),
+              background-color var(--tf-dur-fast) ease,
+              color var(--tf-dur-fast) ease,
+              box-shadow var(--tf-dur-fast) ease,
+              filter var(--tf-dur-fast) ease;
+}
+.pbx-tab:active, .pbx-galbtn:active, .gal-chip:active, .dur-chip:active,
+.cr-voice__play:active, .mytwin-row:active, .stat-trow__btn:active,
+.mp-period__b:active, .tf-chip-select:active, .mpanel__back:active,
+.cr-gchip:active, .gift:active, .voice-speed:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .pbx-galbtn:hover, .mytwin-row:hover, .stat-trow__btn:hover { filter: brightness(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pbx-tab:active, .pbx-galbtn:active, .gal-chip:active, .dur-chip:active,
+  .cr-voice__play:active, .mytwin-row:active, .stat-trow__btn:active,
+  .mp-period__b:active, .tf-chip-select:active, .mpanel__back:active,
+  .cr-gchip:active, .gift:active, .voice-speed:active { transform: none; }
+}
+
+/* Sechsstelliger Code, aus der Mail abgetippt. Steht hier und nicht inline,
+   weil beide Wege ihn brauchen: der Login-Bildschirm und das Konto-Sheet.
+   Ein echtes Eingabefeld je Stelle, kein nachgebautes. Sonst kommt weder die
+   Tastatur des Telefons noch der Passwortspeicher damit zurecht. */
+.tf-code { display: flex; gap: 8px; }
+.tf-code input {
+  flex: 1; min-width: 0; width: 100%; height: 52px; padding: 0;
+  border: 0; outline: 1.5px solid var(--tf-divider); outline-offset: -1.5px;
+  border-radius: var(--tf-radius-md); background: var(--tf-surface-input);
+  color: var(--tf-text-primary); text-align: center;
+  font: var(--tf-fw-semibold) 22px/52px var(--tf-font-base);
+  transition: outline-color var(--tf-dur-fast) var(--tf-ease-out),
+              background var(--tf-dur-fast) var(--tf-ease-out);
+  -moz-appearance: textfield;
+}
+.tf-code input::-webkit-outer-spin-button,
+.tf-code input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.tf-code input:focus { outline-color: var(--tf-accent); outline-width: 2px; }
+/* Gefuellte Stellen heben sich ab, damit man beim Abtippen sieht wie weit man ist. */
+.tf-code input.is-set { background: var(--tf-surface); outline-color: var(--tf-text-muted-2); }
+.tf-code.is-bad input { outline-color: var(--tf-danger); }
+/* Ein kurzer Stups statt einer zweiten Fehlerfarbe. */
+.tf-code.is-bad { animation: tf-code-nudge 320ms var(--tf-ease-out); }
+@keyframes tf-code-nudge {
+  0%, 100% { transform: none; } 20% { transform: translateX(-5px); }
+  50% { transform: translateX(4px); } 80% { transform: translateX(-2px); }
+}
+@media (max-width: 420px) { .tf-code { gap: 6px; } .tf-code input { height: 46px; font-size: 19px; line-height: 46px; } }
+
+/* Zeile unter dem Code: wohin die Mail ging, und der Weg zu einer neuen. */
+.tf-code-meta { display: flex; flex-direction: column; gap: 4px; align-items: center; text-align: center;
+  color: var(--tf-text-muted); font: var(--tf-fw-regular) 13px/19px var(--tf-font-base); }
+.tf-code-meta b { color: var(--tf-text-primary); font-weight: var(--tf-fw-semibold); }
+.tf-code-resend { padding: 0; border: 0; background: none; cursor: pointer;
+  color: var(--tf-accent-text); font: var(--tf-fw-semibold) 13px var(--tf-font-base); text-decoration: underline;
+  text-underline-offset: 2px; }
+.tf-code-resend:hover { filter: brightness(1.1); }
+/* Waehrend der Sperrzeit bleibt der Knopf stehen und zeigt die Restzeit, statt
+   zu verschwinden. Ein Knopf, der weg ist, wirkt wie ein Fehler. Dann aber
+   leiser als der Satz darueber: eine wartende Uhr ist keine Handlung. */
+.tf-code-resend.is-wait { color: var(--tf-text-muted-2); text-decoration: none; cursor: default;
+  pointer-events: none; font-weight: var(--tf-fw-regular); }
+
+/* Wiederverwendbare Keyframes */
+@keyframes tf-enter-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes tf-enter-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes tf-pop-in { from { opacity: 0; transform: scale(0.82); } to { opacity: 1; transform: none; } }
+
+/* Utilities */
+.tf-anim-enter { animation: tf-enter-up var(--tf-dur) var(--tf-ease-out) both; }
+.tf-anim-fade  { animation: tf-enter-fade var(--tf-dur) var(--tf-ease-out) both; }
+.tf-anim-pop   { animation: tf-pop-in var(--tf-dur-fast) var(--tf-ease-out) both; }
+/* Stagger: --i = Index setzen → gestaffeltes Eintreten von Listen */
+.tf-stagger > * { animation: tf-enter-up var(--tf-dur) var(--tf-ease-out) both;
+  animation-delay: calc(var(--i, 0) * var(--tf-stagger)); }
+
+/* A11y: Bewegung reduzieren (Opacity bleibt, Transform raus) */
+@media (prefers-reduced-motion: reduce) {
+  *, .tf-stagger > * {
+    animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important; scroll-behavior: auto !important;
+  }
+  .tf-model-card:hover, .tf-post-card:hover, .tf-price-card:hover,
+  .tf-btn:active, .tf-chip-filter:active { transform: none; }
+}

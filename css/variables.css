@@ -1,0 +1,257 @@
+/* ==========================================================================
+   True Fantasy — Design Tokens als CSS-Variablen
+   Single Source of Truth: ../tokens/tokens.json
+   Light = :root (Standard) · Dark = [data-theme="dark"]
+
+   ARCHITEKTUR (3 Ebenen):
+   1) PRIMITIVE  --tf-c-* / Skalen  → feste Palette & Skalen. NICHT theme-abhängig,
+                  NICHT direkt in Komponenten verwenden. Das ist der „Vorrat".
+   2) SEMANTIC   --tf-accent, --tf-text-*, --tf-surface-*  → Rollen, theme-abhängig.
+                  IMMER diese in Komponenten verwenden.
+   3) COMPONENT  --tf-btn-*, etc. (optional) → nur wenn eine Komponente eigene
+                  Abweichung braucht; mappt auf Semantic/Primitive.
+
+   FEST (nicht ändern): Primitive-Palette, Spacing-Skala, Radius-Skala, Akzent.
+   ERWEITERBAR: neue Semantic-Rollen & Component-Tokens dürfen ergänzt werden,
+                solange sie auf bestehende Primitive zeigen. Siehe docs/07-governance.md
+   ========================================================================== */
+
+/* ============ 1) PRIMITIVE (feste Palette & Skalen) ============ */
+:root {
+  /* Marken-/Akzent-Palette */
+  --tf-c-red-600: #D1034C;   /* logo */
+  --tf-c-red-500: #D7034E;   /* accent */
+  --tf-c-red-700: #C40346;   /* reserviert (AA-Variante), aktuell ungenutzt */
+  --tf-c-pink-300: #FF5C9F;   /* reserviert (AA-Variante), aktuell ungenutzt */
+  --tf-c-pink-500: #FF338E;
+  --tf-c-pink-400: #FF377E;
+  --tf-c-magenta-500: #D9185C;
+  /* Zweite Akzentfamilie. Lila steht immer HINTER dem Pink: Flaechen, Verlaeufe,
+     Nebenkategorien. Nie auf einer Hauptaktion. */
+  --tf-c-violet-600: #5B21B6;
+  --tf-c-violet-500: #7C3AED;
+  --tf-c-violet-400: #A177FF;
+
+  /* Reservierte Warn-Skala. Aktuell ungenutzt: destruktive Aktionen laufen bewusst
+     im Marken-Pink (Entscheidung Lars, 08/26). */
+  --tf-c-danger-500: #DC2B1F;
+  --tf-c-danger-600: #B3221A;
+  --tf-c-danger-300: #FF6F61;
+
+  /* Neutrale (warm/cool grau) */
+  --tf-c-ink-900: #191919;
+  --tf-c-ink-800: #1A1A1A;
+  --tf-c-ink-700: #252424;
+  --tf-c-ink-600: #2D2E2E;
+  --tf-c-ink-500: #323333;
+  --tf-c-grey-600: #5C6274;   /* Phase 1: text-muted light, 6.08:1 auf #FFF / 5.43:1 auf #F1F2F4 */
+  --tf-c-grey-550: #636980;   /* Phase 1: text-muted-2 light, 5.44:1 / 4.85:1 */
+  --tf-c-grey-500: #6F758B;
+  --tf-c-grey-400: #777D94;
+  --tf-c-grey-350: #9AA0A6;   /* Phase 1: text-muted-2 dark, 6.66:1 auf #191919 / 5.16:1 auf #2D2E2E */
+  --tf-c-grey-300: #B4B5B8;
+  --tf-c-cloud-200: #EDF1F3;
+  --tf-c-cloud-150: #EFF0F6;
+  --tf-c-cloud-100: #F1F2F4;
+  --tf-c-cloud-50:  #F7F8FA;
+  --tf-c-white: #FFFFFF;
+
+  /* Akzent-Highlight (Feature-Badges) */
+  --tf-c-yellow: #FFE135;
+  --tf-c-gold:   #D79B03;
+  --tf-c-spring-green: #33FF9D;  /* Create-Advanced Gradient-Akzent */
+
+  /* Sand-Skala. Warmes Papierweiss fuer die hellen Inseln der Landingpage.
+     Bewusst kein reines Weiss: Weiss neben Schwarz liest sich als Theme-Umschalter,
+     Sand liest sich als Material. Siehe docs/SECTION-PLAN-LANDINGPAGE.md, Regel 1. */
+  --tf-c-sand-100: #F4F0E9;
+  --tf-c-sand-200: #EAE4DA;
+  --tf-c-sand-300: #DCD4C6;
+  --tf-c-sand-900: #201D19;   /* Tinte auf Sand */
+  --tf-c-sand-600: #6B6459;   /* gedaempfte Schrift auf Sand */
+
+  /* Level-/Tier-Farben (Gamification) — Fill / Outline, Light + Dark */
+  --tf-c-tier-pink-fill:   #FFCCDE;  --tf-c-tier-pink-line:   #D7034E;  --tf-c-tier-pink-fill-dk:   #70072C;
+  --tf-c-tier-silver-fill: #F0F0F0;  --tf-c-tier-silver-line: #FFFFFF;  --tf-c-tier-silver-fill-dk: #403B3B;
+  --tf-c-tier-gold-fill:   #F8DDAC;  --tf-c-tier-gold-line:   #D79B03;  --tf-c-tier-gold-fill-dk:   #7F632C;
+  --tf-c-tier-blue-fill:   #D6EBFF;  --tf-c-tier-blue-line:   #D9E8F4;  --tf-c-tier-blue-fill-dk:   #31475B;
+}
+
+:root {
+  /* ---- Schrift ---- */
+  --tf-font-base: 'Poppins', sans-serif;
+  --tf-font-display: 'Pattaya', cursive;
+  --tf-font-alt: 'Inter', sans-serif;
+
+  --tf-fw-regular: 400;
+  --tf-fw-medium: 500;
+  --tf-fw-semibold: 600;
+  --tf-fw-bold: 700;
+
+  /* ---- Akzent (theme-unabhängig) → mappt auf Primitive ---- */
+  --tf-accent: var(--tf-c-red-500);
+  --tf-danger: var(--tf-c-red-500);          /* destruktiv = Marken-Pink (Entscheidung Lars) */
+  --tf-danger-strong: var(--tf-c-magenta-500);
+  --tf-danger-tint: var(--tf-accent-tint-15);
+  --tf-accent-text: var(--tf-accent);        /* Accent als Text/Icon = identisch zum Marken-Pink. */
+  --tf-accent-dark: var(--tf-c-magenta-500);
+  --tf-accent-2: var(--tf-c-pink-500);        /* helleres Pink, Hover und Nebenrollen */
+  --tf-accent-light: var(--tf-c-pink-500);
+  --tf-accent-violet: var(--tf-c-violet-500); /* zweite Akzentfamilie, immer nachrangig */
+  --tf-accent-violet-light: var(--tf-c-violet-400);
+  --tf-accent-violet-tint-15: rgba(124, 58, 237, 0.15);
+  --tf-accent-violet-tint-25: rgba(124, 58, 237, 0.25);
+  --tf-accent-light-tint-20: rgba(255, 51, 142, 0.20);
+  --tf-accent-grad-2: var(--tf-c-pink-400);
+  --tf-logo-red: var(--tf-c-red-600);
+  --tf-accent-50: rgba(215, 3, 78, 0.50);
+  --tf-accent-tint-05: rgba(215, 3, 78, 0.05); /* heller Tint (Coin-Badge Light) */
+  --tf-accent-tint-light: var(--tf-accent-tint-05); /* Alias */
+  --tf-accent-tint-15: rgba(215, 3, 78, 0.15); /* Balance-Badge, Slider-Ring */
+  --tf-accent-tint-20: rgba(215, 3, 78, 0.20); /* Slider-Thumb-Ring */
+  --tf-accent-tint-50: rgba(215, 3, 78, 0.50); /* Progress-Start (50% Pink) */
+
+  /* ---- Spacing-Skala ---- */
+  --tf-space-1: 4px;
+  --tf-space-2: 6px;
+  --tf-space-3: 8px;
+  --tf-space-4: 10px;
+  --tf-space-5: 12px;
+  --tf-space-6: 16px;
+  --tf-space-7: 20px;
+  --tf-space-8: 24px;
+  --tf-space-9: 32px;
+
+  /* ---- Layout ---- */
+  --tf-sidebar-width: 200px;
+  --tf-header-height: 72px;
+  --tf-chatlist-width: 400px;
+  --tf-content-max: 1240px;
+  --tf-page-pad-desktop: 24px;
+  --tf-page-pad-mobile: 12px;
+  --tf-grid-gap: 16px;
+
+  /* ---- Radien ---- */
+  --tf-radius-sm: 8px;
+  --tf-radius-md: 12px;
+  --tf-radius-lg: 16px;
+  --tf-radius-pill: 22px;
+  --tf-radius-chip: 40px;
+  --tf-radius-full: 9999px;
+  --tf-radius-image: 12px;
+
+  /* ---- Schatten ---- */
+  --tf-shadow-card: 0 0 20px rgba(0, 0, 0, 0.05);
+  --tf-shadow-pill: 0 5px 9px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.08);
+  --tf-shadow-panel: 0 8px 20px rgba(0, 0, 0, 0.15);
+  --tf-shadow-glow: 0 4px 16px 6px rgba(241, 16, 117, 0.20);
+
+  /* ---- Verläufe ---- */
+  --tf-gradient-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.53) 100%);
+  --tf-gradient-accent: linear-gradient(112deg,#D7034E,#FF377E,#D7034E,#F93C7F,#D7034E);
+  --tf-gradient-brand: linear-gradient(180deg, #D7034E 0%, #72022A 100%); /* Splash/Brand */
+
+  /* ---- Motion (feste Skala; theme-unabhängig) ---- */
+  /* Easing: starke Custom-Kurven statt schwacher CSS-Defaults */
+  --tf-ease-out: cubic-bezier(0.23, 1, 0.32, 1);      /* Enter/Exit, Feedback */
+  --tf-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);  /* Bewegung/Morph auf dem Screen */
+  --tf-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);   /* iOS-Drawer */
+  --tf-ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);   /* Dropdowns: federndes Aufspringen */
+  /* Dauer: UI bleibt < 300ms */
+  --tf-dur-press: 140ms;   /* Button-Press-Feedback */
+  --tf-dur-fast: 180ms;    /* Tabs, Chips, kleine Popover */
+  --tf-dur: 220ms;         /* Dropdowns, View-Wechsel */
+  --tf-dur-slow: 280ms;    /* Modals, Drawer */
+  --tf-stagger: 45ms;      /* Abstand zwischen List-Items */
+
+  /* ============ 2) SEMANTIC — LIGHT (Standard) ============ */
+  --tf-text-primary: var(--tf-c-ink-900);
+  --tf-text-strong: var(--tf-c-ink-800);
+  --tf-text-muted: var(--tf-c-grey-600);     /* Phase 1: war grey-500 (#6F758B) -> 4.08:1 auf surface-muted */
+  --tf-text-muted-2: var(--tf-c-grey-550);   /* Phase 1: stand faelschlich auf grey-300 -> 2.05:1 auf Weiss */
+  --tf-on-accent: var(--tf-c-white);
+
+  --tf-surface: var(--tf-c-white);
+  --tf-surface-glass: rgba(255, 255, 255, 0.85);
+  --tf-surface-muted: var(--tf-c-cloud-100);
+  --tf-surface-input: var(--tf-c-cloud-50);
+
+  --tf-divider: var(--tf-c-cloud-100);
+  --tf-stroke: var(--tf-c-cloud-200);
+  --tf-stroke-2: var(--tf-c-cloud-150);
+
+  --tf-bubble-received: var(--tf-c-cloud-100);  /* empfangene Chat-Bubble */
+  --tf-nav-active: rgba(215, 3, 78, 0.05);      /* aktiver Nav/Filter/Row */
+  --tf-chip-bg: var(--tf-c-white);              /* Filter-Chip-Hintergrund */
+  --tf-overlay-quickreply: rgba(255, 255, 255, 0.40);
+  --tf-coin-bg: #FFF7FA;
+  --tf-illus-shadow: rgba(215,3,78,0.22);    /* Ellipse-Schatten unter 3D-Illustrationen (Light) */                        /* Coin-Pack-Illustrationsfläche (Light) */
+  --tf-illus-tile: var(--tf-c-cloud-100);   /* Tile-BG hinter 3D-Icons (Light = helles Grau, muss sich vom weißen Surface absetzen) */
+
+  /* ---- Helle Insel (Landingpage). Theme-unabhaengig: die Insel sieht in Light
+         und Dark gleich aus, weil sie eine Flaechenrolle ist und kein Theme. ---- */
+  --tf-sand: var(--tf-c-sand-100);
+  --tf-sand-raised: var(--tf-c-sand-200);
+  --tf-sand-stroke: var(--tf-c-sand-300);
+  --tf-on-sand: var(--tf-c-sand-900);
+  --tf-on-sand-muted: var(--tf-c-sand-600);
+  /* Trennlinie und angehobene Flaeche auf der Insel. Vorher gab es dafuer
+     nichts, Karten auf Sand haben ihre Kante jedes Mal selbst erfunden. */
+  --tf-on-sand-divider: rgba(32,29,25,0.10);
+  --tf-on-sand-surface: rgba(255,255,255,0.52);
+}
+
+/* ============ 2) SEMANTIC — DARK ============ */
+[data-theme="dark"] {
+  --tf-text-primary: var(--tf-c-white);
+  --tf-text-strong: var(--tf-c-white);
+  --tf-text-muted: var(--tf-c-grey-300);
+  --tf-text-muted-2: var(--tf-c-grey-350);   /* Phase 1: war grey-400 (#777D94) -> 3.34:1 auf surface-muted */
+  --tf-accent-text: var(--tf-accent);        /* Marken-Pink, auch im Dark Mode */
+  --tf-danger: var(--tf-c-red-500);          /* dasselbe Marken-Pink wie im Light Mode */
+  --tf-danger-strong: var(--tf-c-magenta-500);
+  --tf-danger-tint: rgba(215, 3, 78, 0.16);
+  --tf-on-accent: var(--tf-c-white);
+
+  --tf-surface: var(--tf-c-ink-900);
+  --tf-surface-glass: rgba(21, 21, 21, 0.85);
+  --tf-surface-muted: var(--tf-c-ink-600);
+  --tf-surface-input: var(--tf-c-ink-900);
+
+  --tf-divider: var(--tf-c-ink-500);
+  --tf-stroke: var(--tf-c-ink-500);
+  --tf-stroke-2: var(--tf-c-ink-500);
+
+  --tf-bubble-received: var(--tf-c-ink-500);   /* Desktop. Mobile nutzt #2D2E2E → components.css */
+  --tf-nav-active: rgba(215, 3, 78, 0.10);
+  --tf-chip-bg: var(--tf-c-ink-600);
+  --tf-overlay-quickreply: rgba(25, 25, 25, 0.50);
+  --tf-coin-bg: linear-gradient(0deg, rgba(215,3,78,0.10), rgba(215,3,78,0.10)), var(--tf-c-ink-900); /* Coin-Fläche Dark */
+  --tf-illus-shadow: rgba(215,3,78,0.42);    /* Ellipse-Schatten 3D-Illustrationen (Dark) */
+  --tf-illus-tile: #2A2A2F;                  /* Tile-BG hinter 3D-Icons (Dark = dunkelgrau) */
+
+  --tf-shadow-card: 0 0 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Optional: System-Präferenz automatisch übernehmen, wenn kein data-theme gesetzt */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --tf-text-primary: #FFFFFF;
+    --tf-text-strong: #FFFFFF;
+    --tf-text-muted: #B4B5B8;
+    --tf-text-muted-2: #9AA0A6;
+    --tf-accent-text: var(--tf-accent);
+    --tf-on-accent: #FFFFFF;
+    --tf-surface: #191919;
+    --tf-surface-glass: rgba(25, 25, 25, 0.85);
+    --tf-surface-muted: #2D2E2E;
+    --tf-surface-input: #191919;
+    --tf-divider: #323333;
+    --tf-stroke: #323333;
+    --tf-stroke-2: #323333;
+    --tf-bubble-received: #323333;
+    --tf-nav-active: rgba(215, 3, 78, 0.10);
+    --tf-chip-bg: #2D2E2E;
+    --tf-overlay-quickreply: rgba(25, 25, 25, 0.50);
+  }
+}
