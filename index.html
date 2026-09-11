@@ -895,6 +895,12 @@
        Flaechen, die dafuer gebaut sind. */
     html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
     body { position: fixed; inset: 0; width: 100%; }
+    /* Querlaufende Reihen wischen nur nach links und rechts. Die Chipreihe im
+       Studio war um zwei Pixel hoeher als ihr Rahmen und liess sich deshalb
+       mit dem Finger in jede Richtung schieben. */
+    [data-xscroll], .studio__bar-pills, .feed-rail, .pc-rail, .ap-sel, .ap-strip,
+    .media-picker__row, .quick-replies, .pc-segs, .feed-card__track, .acctp__news--x {
+      overflow-y: hidden; touch-action: pan-x; overscroll-behavior-x: contain; }
     .app { height: 100%; }
     /* Vom Startbildschirm aus gibt es keine Safari-Leisten: die Statusleiste
        oben ist schwarz und nimmt ihren Platz, unten bleibt Raum fuer den
