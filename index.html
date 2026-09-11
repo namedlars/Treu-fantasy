@@ -2545,6 +2545,8 @@
   .ap-alltile__img--rnd { display: flex; align-items: center; justify-content: center; background: var(--tf-accent); color: #fff; }
   .ap-alltile__t { text-align: center; font: var(--tf-fw-semibold) 12px var(--tf-font-base); color: var(--tf-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ap-alltile.is-sel .ap-alltile__t { color: var(--tf-accent-text); }
+  .feed-card__media--auf { cursor: pointer; }
+  .lightbox.lb--ansehen .lightbox__actions { display: none; }
   .fade-wrap { position: relative; }
   .fade-wrap::before, .fade-wrap::after { content: ""; position: absolute; pointer-events: none; opacity: 0; z-index: 3; transition: opacity var(--tf-dur) var(--tf-ease-out); }
   .fade-wrap--x::before { left: 0; top: 0; bottom: 0; width: 60px; background: linear-gradient(to right, var(--tf-surface), transparent); }
@@ -4444,6 +4446,12 @@
   .up-head { display: flex; align-items: center; justify-content: space-between; color: var(--tf-text-primary); font: var(--tf-fw-semibold) 18px var(--tf-font-base); }
   .up-close { width: 32px; height: 32px; border: 0; border-radius: 50%; background: var(--tf-surface-muted); color: var(--tf-text-primary); cursor: pointer;
     display: flex; align-items: center; justify-content: center; }
+  /* Das nachgereichte X fuer Fenster, die keins mitbringen. Es sitzt oben
+     rechts ueber allem, damit es auf jedem Inhalt an derselben Stelle steht. */
+  .up-card { position: relative; }
+  /* Doppelt geschrieben, damit die Mobilregel weiter unten, die .up-close auf
+     relative setzt, dieses X nicht mit nach unten nimmt. */
+  .up-card > .up-close.up-x { position: absolute; top: 14px; right: 14px; z-index: 6; flex: none; margin: 0; }
   .up-drop { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 32px 20px; cursor: pointer;
     border-radius: var(--tf-radius-md); border: 2px dashed var(--tf-divider); transition: border-color var(--tf-dur-fast) var(--tf-ease-out), background var(--tf-dur-fast) var(--tf-ease-out); }
   .up-drop.is-over, .up-drop:hover { border-color: var(--tf-accent-text); background: var(--tf-surface-muted); }
@@ -4817,7 +4825,11 @@
     .convo__back { display: inline-flex; }
     /* Profil = Zwei-Screen-Flow: Menü (Liste) ↔ Inhalt als eigene Seite */
     .prof2 { flex-direction: column; }
-    .prof2__side { width: 100%; flex: 1; border-right: 0; }
+    /* Die Menueseite steht fest: Liste, Create Twin und die Studioflaeche
+       teilen sich den Schirm, nichts wischt darueber hinaus. Wird es eng,
+       gibt die Studioflaeche nach, nicht die Seite. */
+    .prof2__side { width: 100%; flex: 1; border-right: 0; min-height: 0; overflow: hidden; }
+    .prof2__ad .stad { min-height: 120px; }
     .prof2.mob-content .prof2__side { display: none; }
     .prof2:not(.mob-content) .prof2__content { display: none; }
     .mpanel__back { display: inline-flex; }            /* Model-Back sichtbar */
@@ -7112,6 +7124,43 @@
     el.addEventListener('scroll', function () { acctFade(el); }, { passive: true });
     if (window.ResizeObserver) new ResizeObserver(function () { acctFade(el); }).observe(el);
   });
+  /* Jedes Fenster bekommt oben rechts ein X, wenn es keins mitbringt. Bisher
+     schloss man manche nur ueber Abbrechen oder einen Klick daneben, und auf
+     dem Handy gibt es das Daneben kaum. Das X nimmt denselben Weg wie der
+     Abbrechen-Knopf des Fensters, falls es einen gibt. */
+  (function () {
+    var EIGENE = '.up-close, .up-x, [data-pbclose], [data-apallclose], [data-csallclose], [data-delacct-close]';
+    function sorge(mo) {
+      if (mo.hidden) return;
+      var card = mo.querySelector('.up-card'); if (!card) return;
+      if (card.querySelector(EIGENE)) return;
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'up-close up-x'; b.setAttribute('aria-label', 'Close'); b.setAttribute('data-upx', '');
+      b.innerHTML = '<svg class="ic ic-20"><use href="#ic-close"/></svg>';
+      card.appendChild(b);
+    }
+    if (window.MutationObserver) {
+      var obs = new MutationObserver(function (ms) {
+        ms.forEach(function (m) {
+          var el = m.target.closest ? m.target.closest('.up-modal') : null;
+          if (el) sorge(el);
+        });
+      });
+      document.querySelectorAll('.up-modal').forEach(function (mo) {
+        obs.observe(mo, { attributes: true, attributeFilter: ['hidden'], childList: true, subtree: true });
+      });
+    }
+    document.addEventListener('click', function (e) {
+      var x = e.target.closest('[data-upx]'); if (!x) return;
+      var mo = x.closest('.up-modal'); if (!mo) return;
+      /* Erst der eingetragene Schliessweg des Fensters, dann sein
+         Abbrechen-Knopf, zuletzt einfach zu. */
+      var reg = (typeof OVERLAYS !== 'undefined') ? OVERLAYS.filter(function (o) { return o.id === mo.id; })[0] : null;
+      if (reg) { reg.close(); return; }
+      var ab = mo.querySelector('.agree-cancel, [data-cd-secondary], #confirm-no, [data-pc-cancel]');
+      if (ab) ab.click(); else mo.hidden = true;
+    });
+  })();
   function acctKnoepfe() { return [].slice.call(document.querySelectorAll('.acct')); }
   function acctZu() {
     var p = document.getElementById('acctp');
@@ -9251,7 +9300,7 @@
         + '<span class="feed-card__wave">'+Array.from({length:30}).map(function(_,x){return '<i style="height:'+(22+Math.round(Math.abs(Math.sin(x*0.6))*64))+'%"></i>';}).join('')+'</span>'
         + '<span class="feed-card__vdur">'+(a.dur||'00:20')+'</span></div></div>';
     }
-    return '<div class="feed-card__slide" style="background:url(\''+a.src+'\') center/cover no-repeat, '+galBg(k)+'">'
+    return '<div class="feed-card__slide feed-card__media--auf" role="button" tabindex="0" data-lbsrc="'+a.src+'" data-lbtype="'+a.type+'" data-lbdur="'+(a.dur||'')+'" style="background:url(\''+a.src+'\') center/cover no-repeat, '+galBg(k)+'">'
       + (a.type==='video' ? '<span class="feed-card__play"><svg class="ic"><use href="#ic-play"/></svg></span><span class="feed-card__dur">'+(a.dur||'00:15')+'</span>' : '')
       + '</div>';
   }
@@ -9299,7 +9348,7 @@
         +   '<button class="feed-card__subhint" data-subscribe="'+i+'">or subscribe for full access</button>'
         + '</div></div>';
     } else if (p.atts && p.atts.length > 1) { media = attCarouselHTML(p,k,_ar);   /* mehrere Anhaenge (DELIVERY-358) */
-    } else media = p.type==='voice' ? '<div class="feed-card__voice"><button class="feed-card__vplay"><svg class="ic"><use href="#ic-play-filled"/></svg></button><span class="feed-card__wave">'+Array.from({length:30}).map(function(_,x){return '<i style="height:'+(22+Math.round(Math.abs(Math.sin(x*0.6))*64))+'%"></i>';}).join('')+'</span><span class="feed-card__vdur">'+p.dur+'</span></div>' : '<div class="feed-card__media" style="'+_ar+'background:url(\''+p.src+'\') center/cover no-repeat, '+galBg(k)+'">'+(p.type==='video'?'<span class="feed-card__play"><svg class="ic"><use href="#ic-play"/></svg></span><span class="feed-card__dur">'+p.dur+'</span>':'')+'</div>'; return '<article class="feed-card'+(locked?' feed-card--locked':'')+'" data-postid="'+p.id+'"><div class="feed-card__head"><span class="feed-card__av" style="background:url(\''+avatarOf(m)+'\') center/cover no-repeat, '+avatarBg(m)+'"></span><div class="feed-card__id"><b>'+(m.n||'My twin')+'</b><span>'+sub+'</span></div>'+(owner ? '<span class="feed-card__tag"><svg class="ic ic-16"><use href="#ic-send-message"/></svg>Sent to chat</span>' : (p.free ? '<span class="feed-card__tag feed-card__tag--free">Free</span>' : (locked ? priceTag(p.price) : '<span class="feed-card__tag feed-card__tag--owned"><svg class="ic ic-16"><use href="#ic-lock"/></svg>Unlocked</span>')))
+    } else media = p.type==='voice' ? '<div class="feed-card__voice"><button class="feed-card__vplay"><svg class="ic"><use href="#ic-play-filled"/></svg></button><span class="feed-card__wave">'+Array.from({length:30}).map(function(_,x){return '<i style="height:'+(22+Math.round(Math.abs(Math.sin(x*0.6))*64))+'%"></i>';}).join('')+'</span><span class="feed-card__vdur">'+p.dur+'</span></div>' : '<div class="feed-card__media feed-card__media--auf" role="button" tabindex="0" data-lbsrc="'+p.src+'" data-lbtype="'+p.type+'" data-lbdur="'+(p.dur||'')+'" style="'+_ar+'background:url(\''+p.src+'\') center/cover no-repeat, '+galBg(k)+'">'+(p.type==='video'?'<span class="feed-card__play"><svg class="ic"><use href="#ic-play"/></svg></span><span class="feed-card__dur">'+p.dur+'</span>':'')+'</div>'; return '<article class="feed-card'+(locked?' feed-card--locked':'')+'" data-postid="'+p.id+'"><div class="feed-card__head"><span class="feed-card__av" style="background:url(\''+avatarOf(m)+'\') center/cover no-repeat, '+avatarBg(m)+'"></span><div class="feed-card__id"><b>'+(m.n||'My twin')+'</b><span>'+sub+'</span></div>'+(owner ? '<span class="feed-card__tag"><svg class="ic ic-16"><use href="#ic-send-message"/></svg>Sent to chat</span>' : (p.free ? '<span class="feed-card__tag feed-card__tag--free">Free</span>' : (locked ? priceTag(p.price) : '<span class="feed-card__tag feed-card__tag--owned"><svg class="ic ic-16"><use href="#ic-lock"/></svg>Unlocked</span>')))
       + '<button class="feed-card__kebab" data-postmenu="'+i+'" data-post="'+p.id+'" aria-label="Post options"><svg class="ic ic-20"><use href="#ic-more"/></svg></button>'
       + '</div>'+media+'<div class="feed-card__cap">'+p.caption+'</div>'+trow+'</article>'; }   /* Like/Kommentar/Share stecken jetzt im Kebab-Menue */
   function feedFullHTML(){ var i=(window._feedModel!=null)?window._feedModel:studioModel; var m=models[i]||{}; var owner=!!(m.mine || m.twin); var posts=feedFor(i); var cards=posts.map(function(p,k){return feedCard(p,m,k,owner,i);}).join(''); var head='<div class="mpanel mpanel--full"><div class="mytwin-head"><button class="mpanel__back mpanel__back--always" data-feedback><svg class="ic ic-20"><use href="#ic-back"/></svg>'+(m.n?m.n.split(',')[0]:'Profile')+'</button><div class="mpanel__head">Feed</div></div>'; var nb = owner ? '<button class="tf-btn tf-btn--primary" style="width:100%" data-postopen="'+i+'"><svg class="ic ic-20"><use href="#ic-create"/></svg>New post</button>' : ''; return head + nb + '<div class="feed-list">'+cards+'</div></div>'; }
@@ -9323,6 +9372,22 @@
     var t = e.target;
     if (t && t.classList && t.classList.contains('feed-card__track')) carSync(t);
   }, true);
+  /* Ein Post im Feed eines Modells geht auf, wenn man ihn antippt: Bilder gross,
+     Videos im Player. Vorher zeigte das Video nur sein Play-Symbol und tat
+     nichts, das sah aus wie kaputt. */
+  __clickHandlers.push(function(e){
+    var md = e.target.closest('[data-lbsrc]'); if (!md) return;
+    if (e.target.closest('button, a, [data-postmenu], [data-cargo]')) return;
+    e.stopPropagation();
+    lbCtx = 'feed'; lbIdx = -1;
+    showLB(md.dataset.lbsrc, md.dataset.lbtype, md.dataset.lbdur || '00:15');
+    /* Wer einen fremden Post ansieht, bekommt keine Knoepfe zum Loeschen oder
+       Weiterposten: die gehoeren dem Modell, nicht dem Fan. */
+    var fm = (window._feedModel != null) ? models[window._feedModel] : null;
+    var eigen = !!(fm && (fm.mine || fm.twin));
+    $('#lightbox').classList.toggle('lb--ansehen', !eigen);
+    if (md.dataset.lbtype === 'video' && typeof lbVidToggle === 'function') lbVidToggle();
+  });
   __clickHandlers.push(function(e){
     var cs = e.target.closest('[data-carstep]');
     if (cs) {
@@ -10450,6 +10515,7 @@
   let galFrom = 'model';   // woher 'See all' kam: 'model' | 'twin'
   let statsRange='30d', statsScope='all', poRange='7d';
   let statsFrom='model';   /* woher die Statistik aufgerufen wurde, fuer den Weg zurueck */
+  var profZurueck = null;  /* 'model', wenn ein Panel von der Modellseite aus aufging */
   function galleryPanelHTML() {
     const m = models[studioModel], bg = avatarBg(m), all = galleryFor(studioModel).filter(it => !it.gen);
     const items = all.map(it => {
@@ -12064,6 +12130,7 @@
     vidTimer = setInterval(() => { vidCur = Math.min(vidTotal, vidCur + 0.1); if (vidCur >= vidTotal) lbVidStop(); lbVidRender(); }, 100);
   }
   function showLB(src, type, dur) {
+    $('#lightbox').classList.remove('lb--ansehen');   /* Standard: mit Aktionen, der Feed nimmt sie gleich wieder weg */
     $('#lb-media').style.background = `url('${src}') center/cover no-repeat, ${(models[studioModel]?avatarBg(models[studioModel]):'#2D2E2E')}`;
     lbIsVid = type === 'video';
     lbVidStop(); vidCur = 0; vidTotal = lbDurSec(dur);
@@ -12289,14 +12356,19 @@
   $('#agree-modal').addEventListener('click', e => { if (e.target.id === 'agree-modal') closeAgree(); });
 
   // Mobile: Profil als Zwei-Screen-Flow (Menü ↔ Inhalt als eigene Seite)
-  function setProfMobile(content) { const p = document.querySelector('#view-profile .prof2'); if (p) p.classList.toggle('mob-content', !!content); }
+  function setProfMobile(content) { const p = document.querySelector('#view-profile .prof2'); if (p) p.classList.toggle('mob-content', !!content); if (!content) profZurueck = null; }
 
   /* --- Click-Router: Profile-Panels / See-all-Galerie / Cost-Accordion --- */
   __clickHandlers.push(e => {
     const giftEl = e.target.closest('[data-gid]'); if (giftEl) { sendGift(+giftEl.dataset.gift, giftEl.dataset.gid); return; }   // Geschenk auch im My-models-Profil
     const lvEl = e.target.closest('[data-lvlov]'); if (lvEl) { lvEl.closest('.lvlov').classList.toggle('is-open'); return; }
     const galMore = e.target.closest('[data-galmore]'); if (galMore) { e.stopPropagation(); const gm = (profPanel==='twin' && window.twinState._modelIdx!=null) ? window.twinState._modelIdx : studioModel; openGalMenu(galMore, +galMore.dataset.galmore, gm, 'mp'); return; }
-    const menu = e.target.closest('[data-pmenu]'); if (menu) { setProfMobile(false); return; }   // zurück zum Profil-Menü (mobile)
+    /* Zurueck fuehrt dorthin, wo man herkam. Wer von der Modellseite in Payout
+       oder ein anderes Panel gegangen ist, landet wieder auf der Modellseite,
+       nicht in der Liste aller Modelle. */
+    const menu = e.target.closest('[data-pmenu]'); if (menu) {
+      if (profZurueck) { profPanel = profZurueck; profZurueck = null; renderProfile(); setProfMobile(true); return; }
+      setProfMobile(false); return; }
     /* Status-Chip im Profil-Header: verifiziert -> Auszahlungen, sonst direkt in den Verify-Flow. */
     const pvc = e.target.closest('[data-profverify]');
     if (pvc) {
@@ -12314,7 +12386,9 @@
     const rwa = e.target.closest('[data-rwach]');
     if (rwa) { const a = RW_ACHS.filter(x => x.k === rwa.dataset.rwach)[0];
       if (a) { window.rwAchState[a.k].got = true; addCoins(a.coin); renderProfile(); } return; }
-    const pp = e.target.closest('[data-ppanel]'); if (pp) { if (pp.dataset.ppanel==='stats' && profPanel!=='stats') statsFrom = profPanel; profPanel = pp.dataset.ppanel; if (pp.dataset.ppanel==='twin') twinPanel='overview'; if (pp.dataset.ppanel==='rewards') rwTab='daily'; if (pp.dataset.wallet) window.accountVerify._wallet = pp.dataset.wallet; renderProfile(); setProfMobile(true); return; }
+    const pp = e.target.closest('[data-ppanel]'); if (pp) { if (pp.dataset.ppanel==='stats' && profPanel!=='stats') statsFrom = profPanel;
+      profZurueck = (profPanel === 'model' && pp.dataset.ppanel !== 'models' && pp.dataset.ppanel !== 'model') ? 'model' : null;
+      profPanel = pp.dataset.ppanel; if (pp.dataset.ppanel==='twin') twinPanel='overview'; if (pp.dataset.ppanel==='rewards') rwTab='daily'; if (pp.dataset.wallet) window.accountVerify._wallet = pp.dataset.wallet; renderProfile(); setProfMobile(true); return; }
     const sa = e.target.closest('[data-seeall]'); if (sa) { if (profPanel==='twin' && window.twinState._modelIdx!=null) { studioModel = window.twinState._modelIdx; galFrom = 'twin'; } else { galFrom = 'model'; } galPanelFilter = 'all'; profPanel = 'gallery'; renderProfile(); setProfMobile(true); return; }
     const gf = e.target.closest('[data-galpf]'); if (gf) { galPanelFilter = gf.dataset.galpf; renderProfile(); return; }
     const gs = e.target.closest('[data-galsrc]'); if (gs) { const mb = gs.querySelector('[data-galmore]'); lbIdx = mb ? +mb.dataset.galmore : -1; lbModel = (profPanel==='twin' && window.twinState._modelIdx!=null) ? window.twinState._modelIdx : studioModel; lbCtx = 'mp'; showLB(gs.dataset.galsrc, gs.dataset.galtype, gs.dataset.galdur); return; }
@@ -12355,7 +12429,7 @@
       profPanel = 'model'; window.peDraft = null; renderProfile(); setProfMobile(true); return;
     }
     if (e.target.closest('[data-pesave]')) { peSave(); return; }
-    const mr = e.target.closest('[data-model]'); if (mr) { var _mi=+mr.dataset.model; if(models[_mi] && models[_mi].twin && models[_mi].mine){ profPanel='twin'; twinPanel='overview'; renderProfile(); setProfMobile(true); return; } openModelProfile(_mi); return; }
+    const mr = e.target.closest('[data-model]'); if (mr) { profZurueck = null; var _mi=+mr.dataset.model; if(models[_mi] && models[_mi].twin && models[_mi].mine){ profPanel='twin'; twinPanel='overview'; renderProfile(); setProfMobile(true); return; } openModelProfile(_mi); return; }
     const sc = e.target.closest('[data-studio]'); if (sc) { openStudio(+sc.dataset.studio); return; }
   });
 
