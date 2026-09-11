@@ -179,7 +179,7 @@
 .tf-chat-item__name { color: var(--tf-text-primary); font: var(--tf-fw-regular) 20px/24px var(--tf-font-display); }
 .tf-chat-item__preview { color: var(--tf-text-muted); font: var(--tf-fw-regular) 14px/21px var(--tf-font-base); }
 
-.tf-quick-replies { display: flex; gap: 9px; padding: 8px; background: var(--tf-overlay-quickreply); backdrop-filter: blur(10px); }
+.tf-quick-replies { display: flex; gap: 9px; padding: 8px; background: var(--tf-overlay-quickreply); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 .tf-quick-reply { height: 40px; padding: 0 20px; display: flex; align-items: center;
   background: var(--tf-chip-bg); box-shadow: var(--tf-shadow-pill); border-radius: var(--tf-radius-pill);
   color: var(--tf-text-muted); font: var(--tf-fw-semibold) 14px/19px var(--tf-font-base); cursor: pointer;
@@ -275,7 +275,7 @@ background: rgba(215,3,78,0.1); color: var(--tf-accent-text); font: var(--tf-fw-
 
 /* ---- Media-Picker-Overlay (Glass-Panel über dem Composer) ---- */
 .tf-media-picker { display: flex; flex-direction: column; gap: 8px;
-  padding: 12px 24px 8px; background: rgba(25,25,25,0.40); backdrop-filter: blur(10px); }
+  padding: 12px 24px 8px; background: rgba(25,25,25,0.40); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 .tf-media-picker__row { display: flex; align-items: flex-end; gap: 12px; overflow-x: auto; }
 .tf-media-picker__controls { display: flex; align-items: center; gap: 8px; padding: 0 12px; }
 /* Light-Variante des Overlays: rgba(255,255,255,0.40) — via Theme setzen */
@@ -315,13 +315,13 @@ background: rgba(215,3,78,0.1); color: var(--tf-accent-text); font: var(--tf-fw-
 .tf-gen-result__preview { position: relative; width: 274px; height: 202px; border-radius: var(--tf-radius-md);
   overflow: hidden; box-shadow: 0 4px 4px rgba(0,0,0,0.25); }
 .tf-gen-result__preview--loading::after { content: ""; position: absolute; inset: 0;
-  background: rgba(25,25,25,0.80); backdrop-filter: blur(20px); }   /* Blur bis fertig */
+  background: rgba(25,25,25,0.80); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }   /* Blur bis fertig */
 .tf-gen-result__percent { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center;
   color: #fff; font: var(--tf-fw-bold) 21px var(--tf-font-base); }   /* z. B. „47%" */
 .tf-gen-result__body { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 12px; }
 .tf-gen-result__meta { display: flex; align-items: center; gap: 10px; }
 .tf-gen-result__chip { display: inline-flex; align-items: center; gap: 8px; padding: 2px 8px;
-  background: rgba(25,25,25,0.50); backdrop-filter: blur(5px); border-radius: var(--tf-radius-chip);
+  background: rgba(25,25,25,0.50); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); border-radius: var(--tf-radius-chip);
   color: rgba(255,255,255,0.5); font: var(--tf-fw-regular) 14px var(--tf-font-base); }
 .tf-gen-result__prompt { color: #fff; opacity: .5; text-align: justify;
   font: var(--tf-fw-regular) 12px var(--tf-font-base); }
@@ -375,7 +375,7 @@ background: rgba(215,3,78,0.1); color: var(--tf-accent-text); font: var(--tf-fw-
 .tf-gallery__badge { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
   background: rgba(25,25,25,0.5); border-radius: var(--tf-radius-full); }
 .tf-gallery__duration { position: absolute; left: 8px; bottom: 7px; padding: 2px 8px;
-  background: rgba(25,25,25,0.5); backdrop-filter: blur(5px); border-radius: var(--tf-radius-chip);
+  background: rgba(25,25,25,0.5); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); border-radius: var(--tf-radius-chip);
   color: #fff; font: var(--tf-fw-regular) 10px var(--tf-font-base); }
 
 /* ---- Coachmark / Feature-Tooltip ---- */
