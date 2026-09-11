@@ -889,6 +889,13 @@
      dem Feed, und den gibt es dort nicht. */
   @media (max-width: 1180px) {
     .fx, .fx-toggle, .app.fx-an .fx-toggle { display: none; }   /* auf dem Handy gibt es die Spalte nicht */
+    /* Safari auf dem Handy zieht das ganze Dokument mit, sobald man auf einer
+       Flaeche wischt, die selbst nicht scrollt: die Seite schwamm hin und her,
+       Menues wanderten mit. Der Body steht fest, gescrollt wird nur in den
+       Flaechen, die dafuer gebaut sind. */
+    html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+    body { position: fixed; inset: 0; width: 100%; }
+    .app { height: 100%; }
   }
 
   /* Main */
