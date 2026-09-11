@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="assets/logo/app-icon-180.png">
 <meta name="apple-mobile-web-app-title" content="True Fantasy">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="theme-color" content="#191919">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="css/index.css">
@@ -896,6 +896,13 @@
     html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
     body { position: fixed; inset: 0; width: 100%; }
     .app { height: 100%; }
+    /* Vom Startbildschirm aus gibt es keine Safari-Leisten: die Statusleiste
+       oben ist schwarz und nimmt ihren Platz, unten bleibt Raum fuer den
+       Home-Balken. Die App fuellt dazwischen die ganze Hoehe. */
+    @media (display-mode: standalone) {
+      .app { height: 100vh; height: 100dvh; }
+      .bottom-nav { padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+    }
   }
 
   /* Main */
