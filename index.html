@@ -9,6 +9,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>True Fantasy — App Prototype</title>
 <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/logo/app-icon-180.png">
+<meta name="apple-mobile-web-app-title" content="True Fantasy">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#191919">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="css/index.css">
 <style>
   /* ============================================================
@@ -2394,7 +2401,10 @@
   [data-theme="dark"] .ap-preview { box-shadow: none; }
   @media (max-width: 768px) {
     /* Optionen bekommen feste Hoehe (>=3,5 Zeilen), Preview fuellt den Rest und darf schrumpfen */
-    .ap-card { grid-template-rows: minmax(150px, 1fr) auto; }   /* Preview darf mehr Hoehe bekommen */
+    /* Die untere Zeile darf schrumpfen. Vorher war sie auto: wurde der Platz
+       knapp, schnitt die Karte die Liste unten ab, und der Fade sass unter der
+       Schnittkante, wo ihn niemand sah. */
+    .ap-card { grid-template-rows: minmax(110px, 1fr) minmax(0, auto); }
     .ap-preview { min-height: 0; align-items: center; padding-bottom: 20px; }
     .ap-preview__art { width: 64px; height: 64px; }
     .ap-preview__img { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%;
@@ -2404,14 +2414,17 @@
     .ap-preview:not(.ap-preview--chat)::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 58%; background: linear-gradient(to top, var(--tf-surface), transparent); pointer-events: none; z-index: 1; }
     .ap-preview:not(.ap-preview--chat)::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 40%; background: linear-gradient(to top, var(--tf-surface), transparent); opacity: 0.5; pointer-events: none; z-index: 3; }
     .ap-preview__chip { display: inline-flex; z-index: 4; bottom: 30px; }
-    .ap-panel { position: relative; z-index: 5; margin-top: -24px; gap: 8px; }
+    .ap-panel { position: relative; z-index: 5; margin-top: -24px; gap: 8px; min-height: 0; }
     /* .ap-opt-Padding steht im spaeteren Media-Block (sonst gewinnt die Basisregel). */
     /* Kachel-Overrides stehen weiter unten im spaeteren Media-Block (sonst gewinnt die Basisregel). */
     .ap-sep { height: 60px; }
-    .ap-panel .fade-wrap { flex: none; }
     /* Kein "View all"-Popup mehr: die Liste ist selbst die Scroll-Flaeche (Tamer).
-       ~4,75 Zeilen sichtbar, angeschnittene letzte Zeile signalisiert, dass es weitergeht. */
-    .ap-opts { height: auto; max-height: calc(4 * 60px + 4 * 8px + 45px); }
+       ~4,75 Zeilen sichtbar, angeschnittene letzte Zeile signalisiert, dass es
+       weitergeht. Die Huelle wuenscht sich diese Hoehe und gibt nach, wenn die
+       Karte weniger hat; die Liste fuellt die Huelle und scrollt darin. So
+       liegt der Fade immer genau an der Kante, an der die Liste endet. */
+    .ap-panel .fade-wrap { flex: 0 1 calc(4 * 60px + 4 * 8px + 45px); min-height: 150px; display: flex; flex-direction: column; }
+    .ap-opts { height: auto; max-height: 100%; min-height: 0; }
     /* Padding/Random-Spalte stehen im spaeteren Media-Block (sonst gewinnt die Basisregel). */
   }
   @media (min-width: 769px) { .ap-preview { border-right: 1px solid var(--tf-divider); } }
@@ -15286,15 +15299,28 @@
   };
   window.stellHer = function (st) {
     if (!st || !st.view) return false;
+    /* Nur Hauptansichten kommen nach dem Neuladen wieder. Eine Unteransicht
+       wie detail, studio oder der Modell-Feed haengt an Daten, die nach dem
+       Laden noch nicht stehen: sie kam leer zurueck, ohne Inhalt und ohne
+       Weg heraus, und sah aus, als sei die App kaputt. */
+    var HAUPT = ['feed', 'create', 'messages', 'profile', 'credits'];
+    if (HAUPT.indexOf(st.view) < 0) st.view = 'feed';
     try {
       if (window.enterApp) window.enterApp();
-      if (st.modell != null && typeof studioModel !== 'undefined') studioModel = st.modell;
+      if (st.modell != null && typeof studioModel !== 'undefined' && typeof models !== 'undefined' && models[st.modell]) studioModel = st.modell;
+      /* Panels, die ohne Vorlauf stehen. Der Modell-Feed oder ein Editor
+         brauchen einen Kontext, der nach dem Laden fehlt. */
+      var PANELS = ['models', 'model', 'stats', 'verify', 'twin'];
+      if (st.panel && PANELS.indexOf(st.panel) < 0) st.panel = 'models';
       if (st.panel && typeof profPanel !== 'undefined') profPanel = st.panel;
       go(st.view);
       if (st.view === 'messages' && st.chat != null && st.chat >= 0 && typeof openChat === 'function') openChat(st.chat, false);
-      if (st.view === 'profile' && typeof renderProfile === 'function') renderProfile();
+      if (st.view === 'profile' && typeof renderProfile === 'function') {
+        renderProfile();
+        if (typeof setProfMobile === 'function') setProfMobile(!!st.panel && st.panel !== 'models');
+      }
       return true;
-    } catch (e) { return false; }
+    } catch (e) { try { go('feed'); } catch (x) {} return false; }
   };
 })();
 
