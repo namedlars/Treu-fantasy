@@ -675,13 +675,15 @@
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   /* Der Pfeil sagt, dass die Kachel irgendwohin fuehrt. Er liegt auf Glas,
      damit er auf jedem der Motive lesbar bleibt. */
+  /* Derselbe Pfeil wie auf den drei Kacheln unter Make something: heller
+     Kreis mit feiner Kontur, kein dunkles Glas. Bleibt unter dem Subtext. */
   .acctf__pfeil { position: relative; z-index: 4; margin-top: auto;
-    width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    background: rgba(25,25,25,0.34); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18);
+    width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%;
+    color: #fff; background: rgba(255,255,255,0.14);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.34);
     transition: transform var(--tf-dur-fast) var(--tf-ease-out), background var(--tf-dur-fast) var(--tf-ease-out); }
-  .acctf__pfeil .ic { width: 14px; height: 14px; }
-  .acctf:hover .acctf__pfeil { transform: translateX(2px); background: rgba(25,25,25,0.5); }
+  .acctf__pfeil .ic { width: 15px; height: 15px; }
+  .acctf:hover .acctf__pfeil { transform: translateX(2px); background: rgba(255,255,255,0.24); }
   .acctf__h, .acctf__d { padding-right: 34%; }
   /* Je Ton: die Flaeche, das dunklere Blatt und der farbige Schleier ueber dem
      Bild im Blatt (halbe Deckkraft, damit es nicht wie ein Foto wirkt). */
@@ -8543,6 +8545,13 @@
     const v = $('#view-' + id); if (!v) return;
     if (typeof closeAllOverlays === 'function') closeAllOverlays();   /* Overlays ueberlebten frueher jeden View-Wechsel */
     if (typeof acctZu === 'function') acctZu();                      /* das Konto-Popup gehoerte dazu */
+    /* Wenn ein Finger ohne touchend verschwand (Anruf, Wisch aus der App),
+       blieb die Karte im Haltezustand und schluckte Klicks. Und ein Blatt,
+       das nicht mehr am Rumpf haengt, darf keinen Schirm zuruecklassen. */
+    $$('.poke-card.is-halten, .poke-card.war-halten').forEach(k => k.classList.remove('is-halten', 'war-halten'));
+    if (document.body.classList.contains('aside-sheet')) { const _ca = document.getElementById('convo-aside');
+      if (!_ca || _ca.parentNode !== document.body || id !== 'messages') { if (typeof asideSheetZu === 'function') asideSheetZu(); } }
+    if (typeof window.tfRichte === 'function') window.tfRichte();
     $$('.view').forEach(x => x.classList.remove('active'));
     void v.offsetWidth; v.classList.add('active');
     laufSetz($('#title'), titles[id] || id);
@@ -9072,6 +9081,40 @@
     if (window.innerWidth <= 768) document.querySelector('.msg-wrap').classList.add('mob-chat');   // Mobile: Unterhaltung als eigene Seite
   }
   document.querySelector('#convo-back').addEventListener('click', () => document.querySelector('.msg-wrap').classList.remove('mob-chat'));
+  /* Safari auf dem iPhone schiebt beim Einblenden der Tastatur nicht nur
+     das Fenster, sondern auch Vorfahren mit overflow hidden, damit das Feld
+     sichtbar wird. Der Rumpf ist fest, also bleibt der Versatz nach dem
+     Ausblenden stehen: alles sieht richtig aus, aber jeder Tipp trifft ein
+     paar hundert Pixel daneben. Sobald ein Feld den Fokus verliert oder die
+     Tastatur weg ist, wird alles wieder auf null gesetzt. Nur Kaesten, die
+     gar nicht scrollen sollen, echte Listen behalten ihre Stelle. */
+  (function () {
+    if (!('ontouchstart' in window)) return;
+    function starr(el) { var o = getComputedStyle(el).overflowY; return o === 'hidden' || o === 'visible' || o === 'clip'; }
+    function richte() {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
+      var app = document.getElementById('app');
+      var el = document.activeElement;
+      var kette = [];
+      while (el && el !== document.body) { kette.push(el); el = el.parentElement; }
+      ['#app', '.view.active', '.msg-wrap', '.convo-wrap', '.prof2', '.detail-wrap'].forEach(function (s) {
+        var e = document.querySelector(s); if (e && kette.indexOf(e) < 0) kette.push(e);
+      });
+      kette.forEach(function (e) { if (e.scrollTop && starr(e)) e.scrollTop = 0; });
+      if (app && app.scrollTop && starr(app)) app.scrollTop = 0;
+    }
+    document.addEventListener('focusout', function () { setTimeout(richte, 60); setTimeout(richte, 360); });
+    if (window.visualViewport) {
+      var voll = window.visualViewport.height;
+      window.visualViewport.addEventListener('resize', function () {
+        var h = window.visualViewport.height;
+        if (h > voll) voll = h;
+        if (h >= voll - 40) setTimeout(richte, 30);
+      });
+    }
+    window.tfRichte = richte;
+  })();
   // Avatare + Chat-Bilder einmalig vorladen → Wechsel danach ohne Nachlade-Flackern
   function preloadChatImages() {
     chats.forEach(c => { const m = models[c.i];
