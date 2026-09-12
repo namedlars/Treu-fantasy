@@ -655,8 +655,8 @@
      Stufe dunkler, das Bild liegt mit halber Deckkraft darueber. So bleibt
      die Kachel eine Farbflaeche mit Text oben links, und das Blatt zeigt,
      worum es geht. */
-  .acctf__bild { position: absolute; right: 3%; bottom: -22%; z-index: 0;
-    height: 150%; aspect-ratio: 235 / 227;
+  .acctf__bild { position: absolute; right: 3%; bottom: -30%; z-index: 0;
+    height: 130%; aspect-ratio: 235 / 227;
     -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 235 227%22%3E%3Cpath d=%22M221.43 0C221.43 0 210.726 34.5852 183.911 56.0525C157.094 77.5209 125.655 69.9047 78.858 108.992C32.0623 148.079 0 225.947 0 225.947C0 225.947 27.4877 209.28 48.5951 214.247C69.7024 219.213 129.799 241.095 177.171 210.171C224.541 179.247 232.491 123.874 234.663 74.58C236.387 35.4276 221.43 0 221.43 0Z%22 fill=%22black%22/%3E%3C/svg%3E") no-repeat center / contain;
             mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 235 227%22%3E%3Cpath d=%22M221.43 0C221.43 0 210.726 34.5852 183.911 56.0525C157.094 77.5209 125.655 69.9047 78.858 108.992C32.0623 148.079 0 225.947 0 225.947C0 225.947 27.4877 209.28 48.5951 214.247C69.7024 219.213 129.799 241.095 177.171 210.171C224.541 179.247 232.491 123.874 234.663 74.58C236.387 35.4276 221.43 0 221.43 0Z%22 fill=%22black%22/%3E%3C/svg%3E") no-repeat center / contain;
     background: linear-gradient(var(--acctf-tint), var(--acctf-tint)),
@@ -695,7 +695,7 @@
     --acctf-dunkel: color-mix(in srgb, var(--tf-c-gold) 42%, var(--tf-c-ink-900));
     --acctf-tint: color-mix(in srgb, var(--acctf-dunkel) 62%, transparent); }
   /* Das Studio bringt sein eigenes Motiv mit, hell und dunkel getrennt. */
-  .acctf--studio { --acctf-bild: url('assets/illustrations/promo/studio-box-hell.jpg'); }
+  .acctf--studio { --acctf-pos: center 18%; --acctf-bild: url('assets/illustrations/promo/studio-box-hell.jpg'); }
   [data-theme="dark"] .acctf--studio { --acctf-bild: url('assets/illustrations/promo/studio-box-dunkel.jpg'); }
   @media (prefers-reduced-motion: reduce) { .acctf:hover { transform: none; } }
 
@@ -7148,17 +7148,22 @@
     /* Die Ringe zeigen echte Modelle, dieselben wie in der Story-Leiste. */
     var ringe = models.filter(function (m) { return m.foto && isPublic(m); }).slice(0, 3)
       .map(function (m) { return '<span class="acctf__ring" style="--ring-bild:url(\'' + m.av + '\')"><i></i></span>'; }).join('');
-    var banner = (models.filter(function (m) { return m.banner && isPublic(m); })[0] || {}).banner || '';
+    /* Das Blatt ist fast quadratisch und zeigt nur seinen oberen Teil. Die
+       breiten Banner schneiden darin den Kopf ab, also nehmen die Kacheln das
+       hochkante Kartenbild, Gesicht oben. */
+    var oeff = models.filter(function (m) { return m.foto && m.banner && isPublic(m); });
+    var banner = oeff.length ? oeff[0].imgs[0] : '';
+    var story = oeff.length > 3 ? oeff[3].imgs[0] : banner;
     return NEUES.map(function (n) {
       var motiv = '';
       var klasse = 'acctf acctf--' + n.ton;
       if (n.bild === 'studio') { klasse += ' acctf--studio'; motiv = '<span class="acctf__bild"></span>'; }
-      else if (n.bild === 'stories') motiv = '<span class="acctf__bild" style="--acctf-bild:url(\'' + (models.filter(function (m) { return m.banner && isPublic(m); })[2] || {}).banner + '\')"></span>';
+      else if (n.bild === 'stories') motiv = '<span class="acctf__bild" style="--acctf-pos:center 18%;--acctf-bild:url(\'' + story + '\')"></span>';
       /* Das Twin-Motiv ist hochkant. Ohne eigenen Ausschnitt zeigt der Streifen
          den Bauch statt das Gesicht. */
       else if (n.bild === 'chat') motiv = '<span class="acctf__bild" style="--acctf-pos:center 30%;--acctf-bild:url(\'assets/illustrations/promo/chat.jpg\')"></span>';
       else if (n.bild === 'jasmin') motiv = '<span class="acctf__bild" style="--acctf-pos:center 38%;--acctf-bild:url(\'assets/illustrations/twin/star-jasmin.jpg\')"></span>';
-      else if (banner) motiv = '<span class="acctf__bild" style="--acctf-bild:url(\'' + banner + '\')"></span>';
+      else if (banner) motiv = '<span class="acctf__bild" style="--acctf-pos:center 18%;--acctf-bild:url(\'' + banner + '\')"></span>';
       return '<button type="button" class="' + klasse + '" data-acctziel="' + n.ziel + '">'
         + motiv
         + '<span class="acctf__h">' + n.h + '</span>'
