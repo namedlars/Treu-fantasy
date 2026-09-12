@@ -2448,7 +2448,9 @@
        weitergeht. Die Huelle wuenscht sich diese Hoehe und gibt nach, wenn die
        Karte weniger hat; die Liste fuellt die Huelle und scrollt darin. So
        liegt der Fade immer genau an der Kante, an der die Liste endet. */
-    .ap-panel .fade-wrap { flex: 0 1 calc(4 * 60px + 4 * 8px + 45px); min-height: 150px; display: flex; flex-direction: column; }
+    /* Zwei Zeilen ganz und ein Drittel der dritten: die angeschnittene Zeile
+       sagt, dass es weitergeht, und die Vorschau darueber bekommt den Platz. */
+    .ap-panel .fade-wrap { flex: 0 0 calc(2 * 60px + 2 * 8px + 20px); min-height: 0; display: flex; flex-direction: column; }
     .ap-opts { height: auto; max-height: 100%; min-height: 0; }
     /* Padding/Random-Spalte stehen im spaeteren Media-Block (sonst gewinnt die Basisregel). */
   }
