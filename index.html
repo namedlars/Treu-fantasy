@@ -2636,7 +2636,9 @@
     .acctp.is-gross .acctp__seite { flex: 1; }
     .acctp__kopf { display: none; }              /* der Titel steht in der Kopfzeile */
     .acctp__top { display: flex; }
-    .acctp, .acctp.is-gross { position: fixed; inset: 0; width: auto; max-height: none; height: 100dvh;
+    /* Die Seite endet ueber der unteren Navigation, die bleibt immer sichtbar.
+       Den Abstand setzt acctAuf aus der gemessenen Hoehe der Leiste. */
+    .acctp, .acctp.is-gross { position: fixed; inset: 0; bottom: var(--acctp-boden, 0px); width: auto; max-height: none; height: auto;
       border-radius: 0; border: 0; display: flex; flex-direction: column; z-index: 120; }
     .acctp__body { flex: 1; max-height: none; }
     /* Auf dem Handy gibt es die Hoehe des Fensters nicht. Die Kacheln nehmen
@@ -7223,6 +7225,10 @@
     if (!p) return;
     var h = document.getElementById('acctp-news');
     if (h && !h.children.length) h.innerHTML = acctNewsHTML();
+    /* Auf dem Handy bleibt die untere Navigation unter der Seite sichtbar. */
+    var bn = document.querySelector('.bottom-nav');
+    var bnh = (bn && getComputedStyle(bn).display !== 'none') ? bn.getBoundingClientRect().height : 0;
+    p.style.setProperty('--acctp-boden', Math.round(bnh) + 'px');
     p.hidden = false;
     requestAnimationFrame(function () { acctFade(h); });
     var sc = document.getElementById('acct-scrim'); if (sc) sc.hidden = false;
