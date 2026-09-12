@@ -269,8 +269,9 @@
   /* Die Flaeche nimmt genau den Rest der Spalte. Eine feste Mindesthoehe
      machte die Seite auf kleinen Schirmen scrollbar, obwohl darueber nichts
      fehlte. */
-  .prof2__ad { flex: 1; min-height: 0; margin-top: auto; padding: 12px 14px 14px; display: flex; }
-  .prof2__ad .stad { margin-top: 0; flex: 1; min-height: 220px; }
+  /* Auf dem Rechner haengt der Kasten unten, mit Luft zur Zeile darueber. */
+  .prof2__ad { flex: 1; min-height: 0; margin-top: auto; padding: 36px 14px 14px; display: flex; align-items: flex-end; }
+  .prof2__ad .stad { margin-top: 0; flex: 0 0 auto; height: clamp(220px, 32vh, 300px); max-height: 100%; min-height: 0; }
   .prof2__ad .stad__h { font-size: 19px; max-width: none; }
   .prof2__ad .stad__d { font-size: 12.5px; max-width: none; }
   /* Die Werbeflaeche fuers Studio ist wie die drei Kacheln im Hub gebaut,
@@ -4920,7 +4921,7 @@
        bleibt. Die Studioflaeche haengt als Kasten mit Rundungen unten, in
        fester Hoehe; sie waechst nicht mehr in den frei gewordenen Platz. */
     .prof2__quick { max-height: 152px; }
-    .prof2__ad { flex: none; margin-top: auto; }
+    .prof2__ad { flex: none; margin-top: auto; padding: 12px 14px 14px; }
     .prof2__ad .stad { min-height: 0; height: clamp(190px, 36dvh, 360px); }
     .prof2.mob-content .prof2__side { display: none; }
     .prof2:not(.mob-content) .prof2__content { display: none; }
