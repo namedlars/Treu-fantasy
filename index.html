@@ -639,14 +639,7 @@
     border-radius: var(--tf-radius-md); overflow: hidden; color: #fff;
     background: var(--acctf-farbe);
     transition: transform var(--tf-dur-fast) var(--tf-ease-out); }
-  .acctf::before { content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none;
-    border-radius: inherit; padding: 1.5px;
-    background: linear-gradient(135deg,
-      rgba(255,255,255,0.52) 0%, rgba(255,255,255,0.30) 12%, rgba(255,255,255,0.10) 34%,
-      rgba(255,255,255,0.08) 64%, rgba(255,255,255,0.28) 88%, rgba(255,255,255,0.48) 100%);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude; }
+  /* Die Kontur ist dieselbe wie auf .tf-glowcard und steht dort. */
   .acctf:hover { transform: translateY(-1px); }
   /* Das Motiv sitzt im Blatt aus der Marke, unten links, gross. Das Blatt ist
      voll gefuellt, kein Loch in der Mitte: es traegt die Farbe der Kachel eine
@@ -3768,7 +3761,7 @@
   .tf-glowcard:hover { transform: translateY(-2px); }
   .tf-glowcard:active { transform: translateY(0); }
   /* Kontur */
-  .tf-glowcard::before { content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none;
+  .tf-glowcard::before, .acctf::before { content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none;
     border-radius: inherit; padding: 1.5px;
     /* Die Ecken waren zu grell, die Mitte war richtig. Also nur die Spitzen
        gedaempft, der Verlauf dazwischen bleibt wie er war. */
