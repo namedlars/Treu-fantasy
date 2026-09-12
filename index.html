@@ -622,7 +622,7 @@
   /* Zweieinhalb Kacheln untereinander. 84 Pixel je Kachel plus 8 Abstand, die
      angeschnittene dritte sagt, dass es weitergeht. */
   .acctp__news { display: flex; flex-direction: column; gap: 8px; padding: 2px 16px 12px;
-    height: 238px; overflow-y: auto; overscroll-behavior-y: contain;
+    height: 238px; padding-top: 14px; overflow-y: auto; overscroll-behavior-y: contain;
     scrollbar-width: none; -ms-overflow-style: none;
     --oben: 0px; --unten: 26px;
     mask-image: linear-gradient(to bottom, transparent, #000 var(--oben), #000 calc(100% - var(--unten)), transparent);
@@ -2696,7 +2696,7 @@
        rechts. Die Neuigkeiten kommen darunter, nach Log out. */
     .acctp__liste .acctp__rows { order: 0; margin-top: 0; padding: 0; gap: 0; border-top: 0; }
     .acctp__liste .acctp__sec { order: 1; padding: 18px 20px 8px; }
-    .acctp__liste .acctp__news { order: 2; padding: 2px 20px 16px; }
+    .acctp__liste .acctp__news { order: 2; padding: 16px 20px 16px; }
     .acctp__row { padding: 16px 20px; gap: 16px; border-radius: 0; border-bottom: 1px solid var(--tf-divider);
       font: var(--tf-fw-semibold) 16px var(--tf-font-base); }
     .acctp__row > .ic:first-child { display: none; }
@@ -4919,7 +4919,13 @@
        teilen sich den Schirm, nichts wischt darueber hinaus. Wird es eng,
        gibt die Studioflaeche nach, nicht die Seite. */
     .prof2__side { width: 100%; flex: 1; border-right: 0; min-height: 0; overflow: hidden; }
-    .prof2__ad .stad { min-height: 120px; }
+    /* Zweieinhalb Zeilen statt dreieinhalb, damit unter Create Twin Luft
+       bleibt. Die Studioflaeche haengt als Kasten mit Rundungen unten, in
+       fester Hoehe; sie waechst nicht mehr in den frei gewordenen Platz. */
+    .prof2__quick { max-height: 152px; }
+    .prof2__ad { flex: none; margin-top: auto; padding: 12px 14px 14px; }
+    .prof2__ad .stad { min-height: 0; height: clamp(150px, 24dvh, 260px); border-radius: var(--tf-radius-lg); }
+    .prof2__ad .stad::before { display: block; }
     .prof2.mob-content .prof2__side { display: none; }
     .prof2:not(.mob-content) .prof2__content { display: none; }
     .mpanel__back { display: inline-flex; }            /* Model-Back sichtbar */
@@ -5859,7 +5865,8 @@
       </div>
       <div class="acctp__haupt">
       <div class="acctp__liste">
-      <div class="acctp__sec">What is new</div>
+      <!-- Ohne Ueberschrift: "What is new" versprach Meldungen, die Kacheln sind
+           Schnellzugriffe. -->
       <div class="acctp__news" id="acctp-news"></div>
       <div class="acctp__rows">
         <button type="button" class="acctp__row" data-acctgo="subs"><svg class="ic ic-20"><use href="#ic-crown"/></svg>My Subscriptions<span class="acctp__zahl" id="acctp-subs">6</span><svg class="ic ic-16 acctp__chev"><use href="#ic-chevron-right"/></svg></button>
