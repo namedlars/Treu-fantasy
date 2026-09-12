@@ -632,52 +632,68 @@
      erste Kachel scharf, ganz unten die letzte. Die Klassen setzt acctFade. */
   .acctp__news.ist-mitte, .acctp__news.ist-ende { --oben: 22px; }
   .acctp__news.ist-ende { --unten: 0px; }
+  /* Kontur und Farbe wie die drei Kacheln unter Make something im
+     Modellprofil (.tf-glowcard): eine Farbflaeche je Ton, die helle Kontur
+     mit den gedaempften Ecken, Innenschatten unten, Glanz oben links. */
   .acctf { flex: none; position: relative; display: flex; flex-direction: column;
-    justify-content: center; gap: 3px; height: 84px; padding: 12px 14px;
-    border: 0; cursor: pointer; text-align: left;
+    justify-content: flex-start; gap: 2px; height: 108px; padding: 11px 14px 11px;
+    border: 0; cursor: pointer; text-align: left; isolation: isolate;
     border-radius: var(--tf-radius-md); overflow: hidden; color: #fff;
     background: var(--acctf-farbe);
     transition: transform var(--tf-dur-fast) var(--tf-ease-out); }
+  .acctf::before { content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none;
+    border-radius: inherit; padding: 1.5px;
+    background: linear-gradient(135deg,
+      rgba(255,255,255,0.52) 0%, rgba(255,255,255,0.30) 12%, rgba(255,255,255,0.10) 34%,
+      rgba(255,255,255,0.08) 64%, rgba(255,255,255,0.28) 88%, rgba(255,255,255,0.48) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude; }
   .acctf:hover { transform: translateY(-1px); }
-  /* Das Motiv liegt leise hinter der Farbe: es soll zeigen, worum es geht, und
-     nicht den Text schlucken. Ein Symbol daneben waere die dritte Erklaerung
-     derselben Sache und ist deshalb raus. */
-  .acctf__bild { position: absolute; inset: 0; z-index: 0; opacity: 0.55;
-    background: var(--acctf-bild) var(--acctf-pos, center) / cover no-repeat; }
-  /* Der Verlauf sitzt als eigene Schicht darueber, damit links genug Ruhe fuer
-     den Text bleibt und das Motiv nach rechts hin sichtbar wird. */
-  .acctf::after { content: ""; position: absolute; inset: 0; z-index: 0;
-    background: linear-gradient(100deg, var(--acctf-deck) 0%, var(--acctf-deck) 26%,
-      rgba(0,0,0,0.06) 66%, rgba(0,0,0,0.20) 100%); pointer-events: none; }
-  /* Die Stories: drei Ringe wie in der Leiste im Feed, um dreissig Grad gekippt,
-     damit die Kachel nicht wie ein zweites Bannerbild aussieht. */
-  .acctf__stories { position: absolute; right: -22px; top: 50%; z-index: 0;
-    display: flex; gap: 6px; transform: translateY(-50%) rotate(-30deg); opacity: 0.55; }
-  .acctf__ring { width: 46px; height: 46px; flex: none; border-radius: 50%;
-    padding: 2.5px; background: linear-gradient(140deg, #fff, rgba(255,255,255,0.45)); }
-  .acctf__ring i { display: block; width: 100%; height: 100%; border-radius: 50%;
-    background: var(--ring-bild) center/cover no-repeat; }
-  .acctf__h { position: relative; z-index: 1;
-    font: var(--tf-fw-semibold) 13px/1.2 var(--tf-font-base); }
-  .acctf__d { position: relative; z-index: 1;
+  /* Das Motiv sitzt im Blatt aus der Marke, unten links, gross. Das Blatt ist
+     voll gefuellt, kein Loch in der Mitte: es traegt die Farbe der Kachel eine
+     Stufe dunkler, das Bild liegt mit halber Deckkraft darueber. So bleibt
+     die Kachel eine Farbflaeche mit Text oben links, und das Blatt zeigt,
+     worum es geht. */
+  .acctf__bild { position: absolute; right: 10%; bottom: -22%; z-index: 0;
+    height: 150%; aspect-ratio: 235 / 227;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 235 227%22%3E%3Cpath d=%22M221.43 0C221.43 0 210.726 34.5852 183.911 56.0525C157.094 77.5209 125.655 69.9047 78.858 108.992C32.0623 148.079 0 225.947 0 225.947C0 225.947 27.4877 209.28 48.5951 214.247C69.7024 219.213 129.799 241.095 177.171 210.171C224.541 179.247 232.491 123.874 234.663 74.58C236.387 35.4276 221.43 0 221.43 0Z%22 fill=%22black%22/%3E%3C/svg%3E") no-repeat center / contain;
+            mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 235 227%22%3E%3Cpath d=%22M221.43 0C221.43 0 210.726 34.5852 183.911 56.0525C157.094 77.5209 125.655 69.9047 78.858 108.992C32.0623 148.079 0 225.947 0 225.947C0 225.947 27.4877 209.28 48.5951 214.247C69.7024 219.213 129.799 241.095 177.171 210.171C224.541 179.247 232.491 123.874 234.663 74.58C236.387 35.4276 221.43 0 221.43 0Z%22 fill=%22black%22/%3E%3C/svg%3E") no-repeat center / contain;
+    background: linear-gradient(var(--acctf-tint), var(--acctf-tint)),
+      var(--acctf-bild) var(--acctf-pos, center) / cover no-repeat, var(--acctf-dunkel); }
+  .acctf::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    border-radius: inherit;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.30),
+                inset 0 -46px 62px -30px rgba(0,0,0,0.62),
+                inset 0 22px 44px -30px rgba(255,255,255,0.35);
+    background: radial-gradient(120% 80% at 12% 4%, rgba(255,255,255,0.16), transparent 58%); }
+  .acctf__stories { display: none; }
+  .acctf__h { position: relative; z-index: 3;
+    font: var(--tf-fw-regular) 17px/1.15 var(--tf-font-display); }
+  .acctf__d { position: relative; z-index: 3;
     font: var(--tf-fw-regular) 11px/1.3 var(--tf-font-base); color: rgba(255,255,255,0.82);
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   /* Der Pfeil sagt, dass die Kachel irgendwohin fuehrt. Er liegt auf Glas,
      damit er auf jedem der Motive lesbar bleibt. */
-  .acctf__pfeil { position: absolute; right: 12px; top: 50%; z-index: 2; margin-top: -16px;
-    width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  .acctf__pfeil { position: relative; z-index: 4; margin-top: auto;
+    width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
     background: rgba(25,25,25,0.34); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18);
     transition: transform var(--tf-dur-fast) var(--tf-ease-out), background var(--tf-dur-fast) var(--tf-ease-out); }
-  .acctf__pfeil .ic { width: 16px; height: 16px; }
+  .acctf__pfeil .ic { width: 14px; height: 14px; }
   .acctf:hover .acctf__pfeil { transform: translateX(2px); background: rgba(25,25,25,0.5); }
-  .acctf__h, .acctf__d { padding-right: 44px; }
-  .acctf--pink { --acctf-farbe: linear-gradient(110deg, var(--tf-c-pink-400), var(--tf-accent-dark));
-    --acctf-deck: rgba(160,10,62,0.68); }
-  .acctf--lila { --acctf-farbe: linear-gradient(110deg, #a24bd6, #4b1c6b);
-    --acctf-deck: rgba(64,24,92,0.68); }
-  .acctf--gelb { --acctf-farbe: linear-gradient(110deg, #d1a02a, #6b4a0f);
-    --acctf-deck: rgba(106,74,16,0.68); }
+  .acctf__h, .acctf__d { padding-right: 34%; }
+  /* Je Ton: die Flaeche, das dunklere Blatt und der farbige Schleier ueber dem
+     Bild im Blatt (halbe Deckkraft, damit es nicht wie ein Foto wirkt). */
+  .acctf--pink { --acctf-farbe: var(--tf-accent);
+    --acctf-dunkel: color-mix(in srgb, var(--tf-accent) 72%, var(--tf-c-ink-900));
+    --acctf-tint: color-mix(in srgb, var(--acctf-dunkel) 62%, transparent); }
+  .acctf--lila { --acctf-farbe: var(--tf-accent-violet);
+    --acctf-dunkel: color-mix(in srgb, var(--tf-accent-violet) 72%, var(--tf-c-ink-900));
+    --acctf-tint: color-mix(in srgb, var(--acctf-dunkel) 62%, transparent); }
+  .acctf--gelb { --acctf-farbe: color-mix(in srgb, var(--tf-c-gold) 58%, var(--tf-c-ink-900));
+    --acctf-dunkel: color-mix(in srgb, var(--tf-c-gold) 42%, var(--tf-c-ink-900));
+    --acctf-tint: color-mix(in srgb, var(--acctf-dunkel) 62%, transparent); }
   /* Das Studio bringt sein eigenes Motiv mit, hell und dunkel getrennt. */
   .acctf--studio { --acctf-bild: url('assets/illustrations/promo/studio-box-hell.jpg'); }
   [data-theme="dark"] .acctf--studio { --acctf-bild: url('assets/illustrations/promo/studio-box-dunkel.jpg'); }
@@ -2672,7 +2688,7 @@
     .acctp__news { height: auto; flex: 1; min-height: 0; max-height: none; padding: 2px 16px 12px; }
     /* Viereinhalb Kacheln auf dem Handy: die Hoehe ergibt sich aus dem Platz
        bis zu den Zeilen, die angeschnittene fuenfte sagt, dass es weitergeht. */
-    .acctf { flex: none; height: calc((100% - 4 * 8px) / 4.5); min-height: 72px; }
+    .acctf { flex: none; height: calc((100% - 4 * 8px) / 4.5); min-height: 108px; }
     /* Auf dem Handy stehen die Zeilen zuerst, in der Form der Zeilen auf My
        Models: volle Breite, Trennlinie, 16er Schrift, kein Symbol, Winkel
        rechts. Die Neuigkeiten kommen darunter, nach Log out. */
@@ -7137,7 +7153,7 @@
       var motiv = '';
       var klasse = 'acctf acctf--' + n.ton;
       if (n.bild === 'studio') { klasse += ' acctf--studio'; motiv = '<span class="acctf__bild"></span>'; }
-      else if (n.bild === 'stories') motiv = '<span class="acctf__stories">' + ringe + '</span>';
+      else if (n.bild === 'stories') motiv = '<span class="acctf__bild" style="--acctf-bild:url(\'' + (models.filter(function (m) { return m.banner && isPublic(m); })[2] || {}).banner + '\')"></span>';
       /* Das Twin-Motiv ist hochkant. Ohne eigenen Ausschnitt zeigt der Streifen
          den Bauch statt das Gesicht. */
       else if (n.bild === 'chat') motiv = '<span class="acctf__bild" style="--acctf-pos:center 30%;--acctf-bild:url(\'assets/illustrations/promo/chat.jpg\')"></span>';
@@ -7278,7 +7294,13 @@
       return;
     }
     var ziel = e.target.closest('[data-acctgo]');
-    if (ziel) { acctTief(ziel.dataset.acctgo); return; }
+    if (ziel) {
+      /* Desktop: die Zeile, deren Seite schon rechts offen ist, klappt sie
+         beim zweiten Klick wieder zu, mit derselben Breitenanimation. */
+      var pz = document.getElementById('acctp');
+      if (pz && pz.classList.contains('is-gross') && window._acctWas === ziel.dataset.acctgo
+          && window.innerWidth > 768) { acctFlach(); return; }
+      acctTief(ziel.dataset.acctgo); return; }
     var kachel = e.target.closest('[data-acctziel]');
     if (kachel) { acctZiel(kachel.dataset.acctziel); return; }
     if (e.target.closest('[data-acctback]')) {
