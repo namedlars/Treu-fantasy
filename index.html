@@ -918,7 +918,11 @@
   .hdr-back:hover { background: var(--tf-surface-muted); }
   .hdr-back svg { width: 24px; height: 24px; }
   .hdr-titlewrap { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 8px; }
-  .hdr-title { flex: none; color: var(--tf-text-primary); font: var(--tf-fw-semibold) 20px var(--tf-font-base); }
+  /* Der Seitentitel laeuft, wenn er nicht passt. Auf dem Handy nehmen Guthaben,
+     Schalter und Konto rechts den Platz, "Create content" wurde abgeschnitten.
+     Das Laufband kommt aus .tf-lauf, gemessen wird in laufPruef. */
+  .hdr-title { flex: 0 1 auto; min-width: 0; color: var(--tf-text-primary); font: var(--tf-fw-semibold) 20px var(--tf-font-base);
+    white-space: nowrap; }
   .hdr-sub { min-width: 0; color: var(--tf-text-muted); font: var(--tf-fw-regular) 14px var(--tf-font-base); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   /* Theme-Toggle als Pill-Switch (wie Design) */
   .themesw { width: 58px; height: 32px; flex: none; border-radius: var(--tf-radius-full); cursor: pointer; position: relative;
@@ -1120,7 +1124,7 @@
   .ad-card__cta:active { transform: scale(0.97); }
   /* Promo-Karussell */
   /* Peek-Karussell: aktiver Banner linksbündig zum Content, nächster läuft rechts bis zum Bildschirmrand (Bleed) */
-  .promo-carousel { --peek: 96px; position: relative; overflow: hidden; margin-left: -24px; margin-right: -24px; }   /* beidseitig Bleed bis Rand/Navbar; erste/letzte Folie wird per JS auf die Karten-Kante geklemmt */
+  .promo-carousel { --peek: 96px; position: relative; overflow: hidden; margin-left: -24px; margin-right: -24px; touch-action: pan-y; }   /* beidseitig Bleed bis Rand/Navbar; erste/letzte Folie wird per JS auf die Karten-Kante geklemmt */
   .promo-track { display: flex; gap: 16px; transition: transform var(--tf-dur-slow) var(--tf-ease-in-out); }
   .promo-track > .promo { flex: 0 0 calc(100% - var(--peek)); border-radius: var(--tf-radius-md); }
   .promo-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border: 0; cursor: pointer;
@@ -2579,6 +2583,11 @@
   .ap-alltile__t { text-align: center; font: var(--tf-fw-semibold) 12px var(--tf-font-base); color: var(--tf-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ap-alltile.is-sel .ap-alltile__t { color: var(--tf-accent-text); }
   .feed-card__media--auf { cursor: pointer; }
+  /* Beim Halten auf einer Karte soll iOS weder Text auswaehlen noch das
+     Kopieren-Menue oder die Bildvorschau zeigen. */
+  .poke-card, .tf-model-card, .fxc, .story-ring, .pquick {
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  .poke-card .card-img, .tf-model-card .card-img { -webkit-touch-callout: none; pointer-events: none; }
   .lightbox.lb--ansehen .lightbox__actions { display: none; }
   .fade-wrap { position: relative; }
   .fade-wrap::before, .fade-wrap::after { content: ""; position: absolute; pointer-events: none; opacity: 0; z-index: 3; transition: opacity var(--tf-dur) var(--tf-ease-out); }
@@ -4889,6 +4898,12 @@
       box-shadow: 0 -18px 48px -20px rgba(0,0,0,0.45);
       transform: translateY(100%); transition: transform var(--tf-dur) var(--tf-ease-drawer); }
     body.aside-sheet--auf > .convo-aside { transform: none; }
+    /* Die Karte im Blatt ist breiter als das Handy, das Blatt liess sich
+       deshalb seitlich verschieben. Es wischt nur noch nach oben und unten,
+       und alles darin haelt sich an die Breite. */
+    body.aside-sheet > .convo-aside { overflow-x: hidden; touch-action: pan-y; }
+    body.aside-sheet > .convo-aside > * { max-width: 100%; min-width: 0; overflow-x: hidden; }
+    body.aside-sheet .convo-aside .tf-model-card, body.aside-sheet .convo-aside .poke-card { width: 100%; max-width: 100%; }
     /* Der Griff oben, damit es sich wie ein Blatt anfuehlt und nicht wie eine
        Spalte, die versehentlich nach unten gerutscht ist. */
     body.aside-sheet > .convo-aside::before { content: ""; position: absolute; top: 8px; left: 50%;
@@ -5760,7 +5775,7 @@
   <main class="main">
     <header class="tf-header">
       <span class="tf-icon-btn hdr-back" id="back" style="cursor:pointer;color:var(--tf-text-primary)"><svg class="ic"><use href="#ic-back"/></svg></span>
-      <span class="hdr-titlewrap"><span class="hdr-title" id="title">Feed</span><span class="hdr-sub" id="title-sub"></span></span>
+      <span class="hdr-titlewrap"><span class="hdr-title tf-lauf" id="title"><span class="tf-lauf__in">Feed</span></span><span class="hdr-sub" id="title-sub"></span></span>
       <button type="button" class="tf-credits hdr-credits" data-go="credits" aria-label="Your coins - buy more">
         <svg class="ic ic-20" style="color:var(--tf-accent-text)"><use href="#ic-crown"/></svg><span class="bal">300</span></button>
       <span class="themesw" id="toggle" title="Theme" role="button" tabindex="0" aria-label="Toggle theme">
@@ -7843,8 +7858,9 @@
   // Mobile: erste Feed-Karte = Hero (voll sichtbar, wächst beim Scrollen)
   /* Hero nur, wenn die ALLERERSTE Karte gemeint ist. Ist die Twin-Karte vorn, gibt es keinen Hero —
      sonst waere mitten im Grid eine einzelne zu hohe Karte. */
-  { const hc = grid.firstElementChild;
-    if (hc && hc.classList.contains('tf-model-card') && !hc.classList.contains('is-twin')) hc.classList.add('tf-model-card--hero'); }
+  /* Kein Hero mehr: seit der Feed in Reihen steht, war die erste Karte die
+     einzige hohe in ihrer Reihe, und das sah nach einem Fehler aus, nicht nach
+     Absicht. Alle Karten sind gleich hoch. */
   function feedHeroGrow() {
     if (window.innerWidth > 768) return;
     const hc = grid.querySelector('.tf-model-card--hero'); if (!hc) return;
@@ -8026,6 +8042,34 @@
     var karte = e.target.closest && e.target.closest('.poke-card[data-imgs]');
     if (karte === storyCard) stopStory();
   });
+  /* Auf dem Handy gibt es kein Hover. Wer den Finger auf einer Karte haelt,
+     bekommt denselben Bilderlauf; sobald er loslaesst oder wischt, hoert er
+     auf. Ein kurzer Tipp bleibt ein Klick und oeffnet das Profil. */
+  (function () {
+    var uhr = null, karte = null, x0 = 0, y0 = 0;
+    function aus() { if (uhr) { clearTimeout(uhr); uhr = null; } if (karte) { stopStory(); karte.classList.remove('is-halten'); karte = null; } }
+    document.addEventListener('touchstart', function (e) {
+      var k = e.target.closest && e.target.closest('.poke-card[data-imgs]');
+      if (!k || e.touches.length !== 1) return;
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+      uhr = setTimeout(function () { uhr = null; karte = k; k.classList.add('is-halten'); stopStory(); playStory(k); }, 280);
+    }, { passive: true });
+    document.addEventListener('touchmove', function (e) {
+      if (!uhr && !karte) return;
+      var dx = e.touches[0].clientX - x0, dy = e.touches[0].clientY - y0;
+      if (Math.abs(dx) > 8 || Math.abs(dy) > 8) aus();
+    }, { passive: true });
+    document.addEventListener('touchend', aus); document.addEventListener('touchcancel', aus);
+    /* Waehrend des Haltens kein Klick, sonst ginge nach dem Loslassen das Profil auf. */
+    document.addEventListener('click', function (e) {
+      var k = e.target.closest && e.target.closest('.poke-card.is-halten, .poke-card.war-halten');
+      if (k) { e.stopPropagation(); e.preventDefault(); k.classList.remove('war-halten'); }
+    }, true);
+    document.addEventListener('touchend', function (e) {
+      var k = e.target.closest && e.target.closest('.poke-card.is-halten');
+      if (k) { k.classList.add('war-halten'); setTimeout(function () { k.classList.remove('war-halten'); }, 400); }
+    }, true);
+  })();
 
   /* ---------- Chatliste ---------- */
   let activeChat = -1;   // aktuell offener Chat (früh deklariert: renderChatList nutzt es)
@@ -8393,7 +8437,7 @@
     if (typeof acctZu === 'function') acctZu();                      /* das Konto-Popup gehoerte dazu */
     $$('.view').forEach(x => x.classList.remove('active'));
     void v.offsetWidth; v.classList.add('active');
-    $('#title').textContent = titles[id] || id;
+    laufSetz($('#title'), titles[id] || id);
     var _tsub=document.getElementById('title-sub'); if(_tsub) _tsub.textContent='';
     $('#back').style.display = (SUB.includes(id) || (id === 'credits' && window._creditsReturn)) ? 'inline-flex' : 'none';
     const navId = (TF_VIEWS[id] && TF_VIEWS[id].nav) || id;
@@ -14007,6 +14051,38 @@
   $('#promo').addEventListener('mouseenter', () => clearInterval(promoTimer));   // beim Hovern pausieren …
   $('#promo').addEventListener('mouseleave', startPromo);                        // … danach weiterlaufen
   startPromo();
+  /* Wischen auf dem Handy. Der Finger zieht die Reihe mit, beim Loslassen
+     rastet sie auf der naechsten Folie ein, wenn der Weg weit genug war. Ein
+     senkrechter Wisch bleibt beim Scrollen der Seite. */
+  (function () {
+    var host = $('#promo'); if (!host) return;
+    var x0 = 0, y0 = 0, dx = 0, aktiv = false, quer = null, basis = 0;
+    function lesX() { var m = /translateX\((-?[\d.]+)px\)/.exec(track.style.transform || ''); return m ? parseFloat(m[1]) : 0; }
+    host.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1) return;
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dx = 0; aktiv = true; quer = null;
+      basis = lesX(); clearInterval(promoTimer);
+      track.style.transition = 'none';
+    }, { passive: true });
+    host.addEventListener('touchmove', function (e) {
+      if (!aktiv) return;
+      var tx = e.touches[0].clientX - x0, ty = e.touches[0].clientY - y0;
+      if (quer === null) { if (Math.abs(tx) < 6 && Math.abs(ty) < 6) return; quer = Math.abs(tx) > Math.abs(ty); }
+      if (!quer) return;
+      dx = tx;
+      /* An den Enden nur mit halbem Weg, damit man spuert, dass es dort aufhoert. */
+      if ((slide === 0 && dx > 0) || (slide === SLIDES - 1 && dx < 0)) dx = dx / 2.5;
+      track.style.transform = 'translateX(' + (basis + dx) + 'px)';
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
+    function ende() {
+      if (!aktiv) return; aktiv = false;
+      track.style.transition = '';
+      if (quer && Math.abs(dx) > 40) slide = Math.min(SLIDES - 1, Math.max(0, slide + (dx < 0 ? 1 : -1)));
+      renderSlide(); startPromo();
+    }
+    host.addEventListener('touchend', ende); host.addEventListener('touchcancel', ende);
+  })();
   // Banner per Pfeiltasten ←/→ steuern (nur wenn Feed sichtbar & kein Texteingabefeld fokussiert)
   document.addEventListener('keydown', e => {
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
